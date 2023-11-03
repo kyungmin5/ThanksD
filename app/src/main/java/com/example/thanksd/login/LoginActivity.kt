@@ -1,6 +1,7 @@
-package com.example.thanksd
+package com.example.thanksd.login
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -25,15 +26,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.thanksd.R
+import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme
+import com.kakao.sdk.common.util.Utility
 
 class LoginActivity : ComponentActivity() {
 
-    private val kakaoAuthViewModel:KakaoAuthViewModel by viewModels()
+    private val kakaoAuthViewModel: KakaoAuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+//        val keyHash = Utility.getKeyHash(this)
+//        Log.d("keyHash", "$keyHash")
         setContent {
             ThanksDTheme {
                 // A surface container using the 'background' color from the theme
@@ -51,6 +56,7 @@ class LoginActivity : ComponentActivity() {
 
 @Composable
 fun LoginView(kakaoViewModel: KakaoAuthViewModel){
+
     // 상태 저장
     val isLoggedIn = kakaoViewModel.isLoggedIn.collectAsState()
 
