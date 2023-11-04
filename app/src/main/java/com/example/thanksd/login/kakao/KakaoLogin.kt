@@ -1,5 +1,6 @@
-package com.example.thanksd
+package com.example.thanksd.login.kakao
 import android.app.Application
+import com.example.thanksd.BuildConfig
 import com.kakao.sdk.common.KakaoSdk
 
 class KakaoLogin :Application(){
