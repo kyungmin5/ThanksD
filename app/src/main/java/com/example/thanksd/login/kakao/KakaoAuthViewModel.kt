@@ -4,16 +4,21 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thanksd.httpconnection.HttpFunc
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class KakaoAuthViewModel(application: Application) : AndroidViewModel(application) {
+    val serverurl = "http://43.202.215.181:8080/login/kakao"
+    val JsonObj :JSONObject = JSONObject()
+    val httpManager = HttpFunc(serverurl)
 
     companion object {
         const val TAG = "카카오어스"
@@ -35,10 +40,13 @@ class KakaoAuthViewModel(application: Application) : AndroidViewModel(applicatio
             // 카카오계정으로 로그인 공통 callback 구성
             // 카카오톡으로 로그인 할 수 없어 카카오계정으로 로그인할 경우 사용됨
             val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+
                 if (error != null) {
                     Log.e(TAG, "카카오계정으로 로그인 실패", error)
                     continuation.resume("-1")
                 } else if (token != null) {
+                    JsonObj.put("token",token.accessToken)
+                    httpManager.POST(JsonObj)
                     Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
                     continuation.resume(token.accessToken)
                 }
@@ -60,6 +68,7 @@ class KakaoAuthViewModel(application: Application) : AndroidViewModel(applicatio
                         // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
                         UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
                     } else if (token != null) {
+
                         Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
                     }
                 }
