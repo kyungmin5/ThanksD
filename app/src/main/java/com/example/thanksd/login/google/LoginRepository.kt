@@ -14,7 +14,7 @@ class LoginRepository {
     companion object {
         const val TAG = "LoginRepository"
     }
-
+    /* 서버에 토큰 요청 후 access token 받아옴 */
     private val getAccessTokenBaseUrl = "https://www.googleapis.com"
     private val sendAccessTokenBaseUrl = "server_base_url"
 
