@@ -11,7 +11,7 @@ class HttpFunc(private val url: String) {
     // data를 주고받기 위한 scope 생성
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    fun execute() {
+    fun POST(params: String) {
         scope.launch {
             val postResult = withContext(Dispatchers.IO) {
                 // 네트워크 통신을 위해 IO 스레드에서 실행
@@ -28,6 +28,10 @@ class HttpFunc(private val url: String) {
                 // UI 업데이트 로직
 
             }
+        }
+    }
+    fun GET() {
+        scope.launch {
             // 백그라운드 작업을 시작하기 전에 실행되는 부분 (예: Dialog 표시)
             val getResult = withContext(Dispatchers.IO) {
                 // 네트워크 통신을 위해 IO 스레드에서 실행
