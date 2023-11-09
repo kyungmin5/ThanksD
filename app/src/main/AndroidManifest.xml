@@ -32,9 +32,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".MainPage.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.ThanksD" >
+        </activity>
+        <activity android:name=".MainPage.DiaryEntryActivity"
+            android:exported="true"
+            android:label="@string/title_activity_diaryentry"
             android:theme="@style/Theme.ThanksD" >
         </activity>
 
