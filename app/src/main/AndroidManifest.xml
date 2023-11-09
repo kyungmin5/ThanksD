@@ -14,12 +14,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ThanksD"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".userprofile.UserProfileActivity"
+            android:exported="false"
+            android:label="@string/title_activity_user_profile"
+            android:theme="@style/Theme.ThanksD" />
         <activity
             android:name=".login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.ThanksD" >
+            android:theme="@style/Theme.ThanksD">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainPage.MainActivity"
@@ -31,12 +41,7 @@
             android:exported="true"
             android:label="@string/title_activity_diaryentry"
             android:theme="@style/Theme.ThanksD" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
 
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
