@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.thanksd.MainActivity
+import com.example.thanksd.MainPage.MainActivity
 import com.example.thanksd.R
 import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme

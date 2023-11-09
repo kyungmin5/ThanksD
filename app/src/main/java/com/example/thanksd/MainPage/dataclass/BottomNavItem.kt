@@ -1,4 +1,4 @@
-package com.example.thanksd
+package com.example.thanksd.MainPage.dataclass
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
