@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.thanksd.MainActivity
 import com.example.thanksd.R
 import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme
@@ -69,7 +70,7 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
     LaunchedEffect(accessToken) {
         if (accessToken != "-1") {
             // TODO: 여기에 새로운 Activity로 전환하는 로직을 구현하세요.
-//            navigator(Intent(context, NewActivity::class.java)) // 다음 액티비티 이름 넣어야함
+            navigator(Intent(context, MainActivity::class.java)) // 다음 액티비티 이름 넣어야함
         }
     }
 
@@ -114,6 +115,7 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
                             .clickable {
                                 /* google 로그인 구현 */
 //                            viewModel.kakaoLogin()
+                                navigator(Intent(context, MainActivity::class.java))
                             }
                             .fillMaxSize(),
                         contentDescription = null
