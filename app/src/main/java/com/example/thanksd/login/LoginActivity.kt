@@ -1,6 +1,8 @@
-package com.example.thanksd
+package com.example.thanksd.login
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,21 +21,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.thanksd.R
+import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme
+import com.kakao.sdk.common.util.Utility
 
 class LoginActivity : ComponentActivity() {
 
-    private val kakaoAuthViewModel:KakaoAuthViewModel by viewModels()
+    private val kakaoAuthViewModel: KakaoAuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+//        val keyHash = Utility.getKeyHash(this)
+//        Log.d("keyHash", "$keyHash")
         setContent {
             ThanksDTheme {
                 // A surface container using the 'background' color from the theme
@@ -41,7 +49,9 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginView(kakaoAuthViewModel)
+                    LoginView(kakaoAuthViewModel){ intent ->
+                        startActivity(intent)
+                    }
 //                    Greeting("Android",)
                 }
             }
@@ -50,11 +60,18 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginView(kakaoViewModel: KakaoAuthViewModel){
+fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
+    val context = LocalContext.current
     // 상태 저장
     val isLoggedIn = kakaoViewModel.isLoggedIn.collectAsState()
 
     val accessToken = isLoggedIn.value // 실패시 "-1" 저장
+    LaunchedEffect(accessToken) {
+        if (accessToken != "-1") {
+            // TODO: 여기에 새로운 Activity로 전환하는 로직을 구현하세요.
+//            navigator(Intent(context, NewActivity::class.java)) // 다음 액티비티 이름 넣어야함
+        }
+    }
 
     BoxWithConstraints(
         modifier = Modifier
@@ -103,7 +120,7 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel){
                     )
                 }
             }
-            Text(accessToken)
+//            Text(accessToken)
         }
     }
 }
