@@ -46,8 +46,8 @@ class KakaoAuthViewModel(application: Application) : AndroidViewModel(applicatio
                     continuation.resume("-1")
                 } else if (token != null) {
                     JsonObj.put("token",token.accessToken)
-                    httpManager.POST(JsonObj)
                     Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
+                    httpManager.POST(JsonObj)
                     continuation.resume(token.accessToken)
                 }
 

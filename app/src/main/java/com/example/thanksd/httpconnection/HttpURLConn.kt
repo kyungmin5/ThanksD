@@ -5,6 +5,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
@@ -33,8 +34,10 @@ class HttpURLConn {
 
             // POST로 넘겨줄 파라미터를 OutputStream으로 전송
             conn.outputStream.use { os ->
-                val outputInBytes = params.toString().toByteArray(StandardCharsets.UTF_8)
-                os.write(outputInBytes)
+                val writer = OutputStreamWriter(os,StandardCharsets.UTF_8)
+                writer.use {
+                    it.write(params.toString())
+                }
             }
 
             // 결과값 받아오기
