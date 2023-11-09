@@ -1,4 +1,4 @@
-package com.example.thanksd
+package com.example.thanksd.MainPage
 
 import android.annotation.SuppressLint
 import android.os.Bundle
