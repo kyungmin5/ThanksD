@@ -6,17 +6,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class HttpFunc(private val url: String) {
     // data를 주고받기 위한 scope 생성
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    fun POST(params: String) {
+    fun POST(params: JSONObject){
         scope.launch {
             val postResult = withContext(Dispatchers.IO) {
                 // 네트워크 통신을 위해 IO 스레드에서 실행
                 try {
-                    HttpURLConn().POST(url, "Params")
+                    HttpURLConn().POST(url,  params)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     null

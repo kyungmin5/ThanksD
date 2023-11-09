@@ -1,15 +1,18 @@
 package com.example.thanksd.httpconnection
 
 import android.util.Log
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
 
 class HttpURLConn {
     // Post
-    fun POST(mUrl: String, params: String): String? {
+    fun POST(mUrl: String, params: JSONObject): JSONObject? {
         try {
             // String으로 받아온 URL을 URL 객체로 생성
             val url = URL(mUrl)
@@ -26,30 +29,41 @@ class HttpURLConn {
             conn.doOutput = true
 
             // Accept-Charset 설정 (UTF-8)
-            conn.setRequestProperty("Accept-Charset", "UTF-8")
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+            conn.setRequestProperty("Accept", "application/json")
 
             // POST로 넘겨줄 파라미터를 OutputStream으로 전송
             conn.outputStream.use { os ->
-                val outputInBytes = params.toByteArray(StandardCharsets.UTF_8)
-                os.write(outputInBytes)
+                val writer = OutputStreamWriter(os,StandardCharsets.UTF_8)
+                writer.use {
+                    it.write(params.toString())
+                }
             }
 
             // 결과값 받아오기
             val response = StringBuilder()
             val resCode = conn.responseCode
+            Log.d("resCode",resCode.toString())
             if(resCode == HttpURLConnection.HTTP_OK) {
                 conn.inputStream.use { `is` ->
                     BufferedReader(InputStreamReader(`is`)).use { br ->
                         var line: String?
                         while (br.readLine().also { line = it } != null) {
                             response.append(line)
-                            response.append('\r')
+                            response.append('\n')
                         }
                     }
                 }
                 Log.d("HTTPResponse",response.toString().trim { it <= ' '})
-                return response.toString().trim { it <= ' ' }
+                try {
+                    val jsonResponse = JSONObject(response.toString())
+                    // JSON 객체로부터 데이터를 추출하거나 조작하는 로직을 여기에 구현하세요.
+                    return jsonResponse
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    Log.d("JSONError", "Error parsing JSON")
+                }
+                return null
             }
             // 결과 처리
 
@@ -62,7 +76,7 @@ class HttpURLConn {
     }
 
     // GET
-    fun GET(mUrl: String): String? {
+    fun GET(mUrl: String):JSONObject? {
         try {
             val url = URL(mUrl)
             val conn = url.openConnection() as HttpURLConnection
@@ -83,12 +97,20 @@ class HttpURLConn {
                         var line: String?
                         while (br.readLine().also { line = it } != null) {
                             response.append(line)
-                            response.append('\r')
+                            response.append('\n')
                         }
                     }
                 }
                 Log.d("HTTPResponse",response.toString().trim { it <= ' '})
-                return response.toString().trim { it <= ' ' }
+                try {
+                    val jsonResponse = JSONObject(response.toString())
+                    // JSON 객체로부터 데이터를 추출하거나 조작하는 로직을 여기에 구현하세요.
+                    return jsonResponse
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    Log.d("JSONError", "Error parsing JSON")
+                }
+                return null
             }
 
         } catch (e: Exception) {
