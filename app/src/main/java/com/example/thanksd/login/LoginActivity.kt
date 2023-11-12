@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.thanksd.MainPage.MainActivity
 import com.example.thanksd.R
+import com.example.thanksd.login.google.GoogleLoginActivity
 import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme
 import com.kakao.sdk.common.util.Utility
@@ -115,7 +116,8 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
                             .clickable {
                                 /* google 로그인 구현 */
 //                            viewModel.kakaoLogin()
-                                navigator(Intent(context, MainActivity::class.java))
+                                navigator(Intent(context, GoogleLoginActivity::class.java))
+//                                navigator(Intent(context, MainActivity::class.java))
                             }
                             .fillMaxSize(),
                         contentDescription = null

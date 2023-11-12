@@ -13,12 +13,13 @@ import java.nio.charset.StandardCharsets
 class HttpURLConn {
     // Post
     fun POST(mUrl: String, params: JSONObject): JSONObject? {
+        lateinit var conn : HttpURLConnection
         try {
             // String으로 받아온 URL을 URL 객체로 생성
             val url = URL(mUrl)
 
             // HttpURLConnection을 열어줌
-            val conn = url.openConnection() as HttpURLConnection
+            conn = url.openConnection() as HttpURLConnection
 
             // Timeout 설정
             conn.readTimeout = 10000
@@ -39,7 +40,6 @@ class HttpURLConn {
                     it.write(params.toString())
                 }
             }
-
             // 결과값 받아오기
             val response = StringBuilder()
             val resCode = conn.responseCode
@@ -57,12 +57,14 @@ class HttpURLConn {
                 Log.d("HTTPResponse",response.toString().trim { it <= ' '})
                 try {
                     val jsonResponse = JSONObject(response.toString())
-                    // JSON 객체로부터 데이터를 추출하거나 조작하는 로직을 여기에 구현하세요.
+                    // JSON 객체로부터 데이터를 추출하거나 조작하는 로직을 여기에 구현하세요
+
                     return jsonResponse
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     Log.d("JSONError", "Error parsing JSON")
                 }
+                // 결과값 return json?
                 return null
             }
             // 결과 처리
@@ -71,6 +73,8 @@ class HttpURLConn {
             e.printStackTrace()
             // 오류 발생 시 로그 출력 후 null 반환
             Log.d("ERROR", "Exception Error")
+        }finally {
+
         }
         return null
     }

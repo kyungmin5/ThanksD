@@ -27,7 +27,7 @@ class GoogleLogin(context: Context) {
         try {
             val authCode: String? =
                 completedTask.getResult(ApiException::class.java)?.serverAuthCode
-            LoginRepository().getAccessToken(authCode!!)
+
         } catch (e: ApiException) {
             Log.w(TAG, "handleSignInResult: error" + e.statusCode)
         }
@@ -36,7 +36,6 @@ class GoogleLogin(context: Context) {
     fun signIn(activity: Activity) {
         val signInIntent: Intent = googleSignInClient.signInIntent
         activity.startActivityForResult(signInIntent, 1000)
-
     }
 
     fun signOut(context: Context) {

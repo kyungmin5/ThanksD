@@ -17,13 +17,12 @@ class HttpFunc(private val url: String) {
             val postResult = withContext(Dispatchers.IO) {
                 // 네트워크 통신을 위해 IO 스레드에서 실행
                 try {
-                    HttpURLConn().POST(url,  params)
+                    HttpURLConn().POST(url,params)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     null
                 }
             }
-
             // UI 업데이트 로직
             postResult?.let {
                 // UI 업데이트 로직
