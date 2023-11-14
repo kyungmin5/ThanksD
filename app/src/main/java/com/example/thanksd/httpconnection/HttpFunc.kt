@@ -1,6 +1,10 @@
 package com.example.thanksd.httpconnection
 
 import android.content.Context
+import android.util.Log
+import com.example.thanksd.login.dataclass.ClientInformation
+import com.example.thanksd.login.dataclass.ClientInformation.email
+import com.example.thanksd.login.dataclass.ClientInformation.token
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -13,11 +17,12 @@ class HttpFunc(private val url: String) {
     private val scope = CoroutineScope(Dispatchers.Main)
 
     fun POST(params: JSONObject){
+        var response:JSONObject? = null
         scope.launch {
             val postResult = withContext(Dispatchers.IO) {
                 // 네트워크 통신을 위해 IO 스레드에서 실행
                 try {
-                    HttpURLConn().POST(url,params)
+                    response = HttpURLConn().POST(url,params)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     null
@@ -25,6 +30,15 @@ class HttpFunc(private val url: String) {
             }
             // UI 업데이트 로직
             postResult?.let {
+
+                val data = JSONObject(response?.get("data").toString())
+                val token = data.get("token").toString()
+                val email = data.get("email").toString()
+                val isRegistered = data.get("isRegistered").toString().toBoolean()
+                val platformId = data.get("platformId").toString()
+                ClientInformation.updateValue(token,email,isRegistered,platformId)
+                Log.d("check12",ClientInformation.platformID)
+
                 // UI 업데이트 로직
 
             }
