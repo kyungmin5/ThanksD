@@ -32,7 +32,7 @@ class HttpURLConn {
             // Accept-Charset 설정 (UTF-8)
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
             conn.setRequestProperty("Accept", "application/json")
-            Log.d("check123","여기")
+
             // POST로 넘겨줄 파라미터를 OutputStream으로 전송
             conn.outputStream.use { os ->
                 val writer = OutputStreamWriter(os,StandardCharsets.UTF_8)
