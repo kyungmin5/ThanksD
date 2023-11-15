@@ -30,7 +30,6 @@ class HttpFunc(private val url: String) {
             }
             // UI 업데이트 로직
             postResult?.let {
-
                 val data = JSONObject(response?.get("data").toString())
                 val token = data.get("token").toString()
                 val email = data.get("email").toString()

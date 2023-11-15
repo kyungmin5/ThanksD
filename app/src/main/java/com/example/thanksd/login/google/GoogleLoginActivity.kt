@@ -79,6 +79,7 @@ fun GoogleLoginScreen() {
                 webViewClient = object:WebViewClient(){
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                         if (url.startsWith(redirecturl)) {
+                            Log.d("google_login","어스 안들어감")
                             val uri = Uri.parse(url)
                             val authCode =  uri.getQueryParameter("code")
                             if(authCode != null) {
