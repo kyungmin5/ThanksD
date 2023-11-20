@@ -70,7 +70,11 @@ fun GoogleLoginScreen() {
 //    cookieManager.flush()
     LaunchedEffect(check.value){
         if(check.value == 1){
-            cur.startActivity(Intent(cur, MainActivity::class.java))
+            if(ClientInformation.isRegistered)
+                cur.startActivity(Intent(cur, MainActivity::class.java))
+            else{
+
+            }
         }else if(check.value == 0){
             cur.startActivity(Intent(cur, LoginActivity::class.java))
         }

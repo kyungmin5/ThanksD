@@ -26,6 +26,7 @@ class HttpFunc(private val url: String) {
                     response = HttpURLConn().POST(url,params)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    null
                 }
             }
             // UI 업데이트 로직
@@ -69,12 +70,14 @@ class HttpFunc(private val url: String) {
                     response = HttpURLConn().DELETE(url)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    null
                 }
             }
             // UI 업데이트 로직
             deleteResult?.let {
                 // viewModel로 전달된 response 값 관찰해서 return 받은 json 오브젝트 활용하면 됩니다.
                 viewModel.response.value = response
+
             }
         }
     }

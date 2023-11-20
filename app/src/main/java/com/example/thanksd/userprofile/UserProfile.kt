@@ -316,17 +316,19 @@ class UserProfile {
             )
         }
         response.response.observe(lifecycleOwner, Observer {response->
-            val code = response.get("code").toString()
-            Log.d("delete_code", code)
-            if(code == "200"){
-                Toast.makeText(context,"성공적으로 회원탈퇴 하셨습니다.",Toast.LENGTH_SHORT).show()
-                val intent = Intent(context,LoginActivity::class.java)
-                context.startActivity(intent)
+            if(response!=null) {
+                val code = response.get("code").toString()
+                Log.d("delete_code", code)
+                if (code == "200") {
+                    Toast.makeText(context, "성공적으로 회원탈퇴 하셨습니다.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(context, "회원탈퇴에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
             }else{
-                Toast.makeText(context,"회원탈퇴에 실패했습니다.",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "회원탈퇴에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
-
-
         })
     }
 

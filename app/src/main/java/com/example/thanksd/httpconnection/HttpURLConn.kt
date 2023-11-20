@@ -133,7 +133,7 @@ class HttpURLConn {
                 requestMethod = "DELETE"
                 connectTimeout = 15000
                 readTimeout = 10000
-                doInput = false
+                doInput = true
                 //TODO 경우에 따라서는 input을 true로 설정해야할 수도 있습니다.
                 doOutput = true
             }
@@ -161,10 +161,11 @@ class HttpURLConn {
                     Log.d("JSONError", "Error parsing JSON")
                 }
                 return null
+            }else{
+                Log.d("HTTPResponse","bad response")
             }
-
         } catch (e: Exception) {
-            e.printStackTrace()
+//            e.printStackTrace()
             Log.d("ERROR", "Check URL")
         }
         return null
