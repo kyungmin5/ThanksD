@@ -57,14 +57,12 @@ class HttpURLConn {
                 Log.d("HTTPResponse",response.toString().trim { it <= ' '})
                 try {
                     val jsonResponse = JSONObject(response.toString())
-                    // JSON 객체로부터 데이터를 추출하거나 조작하는 로직을 여기에 구현하세요
-
                     return jsonResponse
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     Log.d("JSONError", "Error parsing JSON")
                 }
-                // 결과값 return json?
+
                 return null
             }
             // 결과 처리
@@ -80,6 +78,7 @@ class HttpURLConn {
     }
 
     // GET
+    //TODO 인자가 필요한 GET의 경우는 함수 오버로딩을 해야할 것 같습니다.
     fun GET(mUrl: String):JSONObject? {
         try {
             val url = URL(mUrl)
@@ -91,10 +90,10 @@ class HttpURLConn {
                 doInput = true
                 doOutput = true
             }
-            // 결과값 받아오기 수정 필요함
+
             val resCode = conn.responseCode
             val response = StringBuilder()
-
+            Log.d("resCode",resCode.toString())
             if(resCode == HttpURLConnection.HTTP_OK) {
                 conn.inputStream.use { `is` ->
                     BufferedReader(InputStreamReader(`is`)).use { br ->
@@ -109,6 +108,53 @@ class HttpURLConn {
                 try {
                     val jsonResponse = JSONObject(response.toString())
                     // JSON 객체로부터 데이터를 추출하거나 조작하는 로직을 여기에 구현하세요.
+                    return jsonResponse
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    Log.d("JSONError", "Error parsing JSON")
+                }
+                return null
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("ERROR", "Check URL")
+        }
+        return null
+    }
+
+    //TODO get과 마찬가지로 인자가 필요할 경우 함수 오버로딩을 해야할 것 같습니다.
+    //TODO 현재는 회원탈퇴기능을 위해 사용합니다
+    fun DELETE(mUrl: String):JSONObject?{
+        try {
+            val url = URL(mUrl)
+            val conn = url.openConnection() as HttpURLConnection
+            conn.apply {
+                requestMethod = "DELETE"
+                connectTimeout = 15000
+                readTimeout = 10000
+                doInput = false
+                //TODO 경우에 따라서는 input을 true로 설정해야할 수도 있습니다.
+                doOutput = true
+            }
+
+            val resCode = conn.responseCode
+            val response = StringBuilder()
+            Log.d("resCode",resCode.toString())
+            if(resCode == HttpURLConnection.HTTP_OK) {
+                conn.inputStream.use { `is` ->
+                    BufferedReader(InputStreamReader(`is`)).use { br ->
+                        var line: String?
+                        while (br.readLine().also { line = it } != null) {
+                            response.append(line)
+                            response.append('\n')
+                        }
+                    }
+                }
+                Log.d("HTTPResponse",response.toString().trim { it <= ' '})
+                try {
+                    val jsonResponse = JSONObject(response.toString())
+
                     return jsonResponse
                 } catch (e: JSONException) {
                     e.printStackTrace()

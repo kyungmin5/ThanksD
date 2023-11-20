@@ -2,6 +2,9 @@ package com.example.thanksd.userprofile
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,14 +33,20 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import com.example.thanksd.R
+import com.example.thanksd.httpconnection.HttpFunc
+import com.example.thanksd.httpconnection.JsonViewModel
+import com.example.thanksd.login.LoginActivity
 import com.example.thanksd.login.dataclass.ClientInformation
 import com.example.thanksd.login.google.GoogleLoginActivity
+import org.json.JSONObject
 
 class UserProfile {
     @Composable
@@ -272,6 +281,11 @@ class UserProfile {
 
     @Composable
     fun Extra(){
+        val serverurl = "http://43.202.215.181:8080/members"
+        val response = JsonViewModel()
+        val httpManager = HttpFunc(serverurl)
+        val context = LocalContext.current
+        val lifecycleOwner = LocalLifecycleOwner.current
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
@@ -290,11 +304,30 @@ class UserProfile {
 //                    .weight(1.0f)
                     .clickable {
                         //TODO 회원 탈퇴 기능 구현
-
+                        AlertDialog.Builder(context)
+                            .setTitle("회원 탈퇴 확인")
+                            .setMessage("정말로 회원 탈퇴를 하시겠습니까?")
+                            .setPositiveButton("탈퇴") { dialog, which ->
+                                httpManager.DELETE(response)
+                            }
+                            .setNegativeButton("취소", null)
+                            .show()
                     }
             )
-
         }
+        response.response.observe(lifecycleOwner, Observer {response->
+            val code = response.get("code").toString()
+            Log.d("delete_code", code)
+            if(code == "200"){
+                Toast.makeText(context,"성공적으로 회원탈퇴 하셨습니다.",Toast.LENGTH_SHORT).show()
+                val intent = Intent(context,LoginActivity::class.java)
+                context.startActivity(intent)
+            }else{
+                Toast.makeText(context,"회원탈퇴에 실패했습니다.",Toast.LENGTH_SHORT).show()
+            }
+
+
+        })
     }
 
 
