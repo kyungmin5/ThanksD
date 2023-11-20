@@ -25,7 +25,6 @@
         <activity
             android:name=".login.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_login"
             android:theme="@style/Theme.ThanksD">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

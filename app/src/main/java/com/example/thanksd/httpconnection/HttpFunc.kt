@@ -2,6 +2,7 @@ package com.example.thanksd.httpconnection
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.ViewModel
 import com.example.thanksd.login.dataclass.ClientInformation
 import com.example.thanksd.login.dataclass.ClientInformation.email
 import com.example.thanksd.login.dataclass.ClientInformation.token
@@ -16,7 +17,7 @@ class HttpFunc(private val url: String) {
     // data를 주고받기 위한 scope 생성
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    fun POST(params: JSONObject){
+    fun POST(params: JSONObject,viewModel: JsonViewModel){
         var response:JSONObject? = null
         scope.launch {
             val postResult = withContext(Dispatchers.IO) {
@@ -25,22 +26,12 @@ class HttpFunc(private val url: String) {
                     response = HttpURLConn().POST(url,params)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    null
                 }
             }
             // UI 업데이트 로직
             postResult?.let {
-
-                val data = JSONObject(response?.get("data").toString())
-                val token = data.get("token").toString()
-                val email = data.get("email").toString()
-                val isRegistered = data.get("isRegistered").toString().toBoolean()
-                val platformId = data.get("platformId").toString()
-                ClientInformation.updateValue(token,email,isRegistered,platformId)
-                Log.d("check12",ClientInformation.platformID)
-
-                // UI 업데이트 로직
-
+                // viewModel로 전달된 response 값 관찰해서 return 받은 json 오브젝트 활용하면 됩니다.
+                viewModel.response.value = response
             }
         }
     }

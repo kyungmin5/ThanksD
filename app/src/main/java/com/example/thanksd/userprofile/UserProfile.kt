@@ -1,5 +1,6 @@
 package com.example.thanksd.userprofile
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thanksd.R
+import com.example.thanksd.login.dataclass.ClientInformation
+import com.example.thanksd.login.google.GoogleLoginActivity
 
 class UserProfile {
     @Composable
@@ -69,7 +72,12 @@ class UserProfile {
             verticalAlignment = Alignment.CenterVertically
         ){
             /* user image 코드 필요 */
-            //TODO 유저 이미지 불러오기
+            Image(
+                painterResource(id = R.drawable.default_user_img),
+                modifier = Modifier.width(38.dp).height(38.dp),
+                contentDescription = null
+            )
+
             Spacer(
                 modifier = Modifier.width(10.dp)
             )
@@ -78,11 +86,11 @@ class UserProfile {
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ){
                 Text(
-                    text = "유저 닉네임",
+                    text = "건붕이", //TODO 유저 닉네임 지정 형식?
                     textAlign = TextAlign.Start,
                     fontSize = 20.sp)
                 Text(
-                    text = "유저 이메일",
+                    text = ClientInformation.email!!,
                     textAlign = TextAlign.Start,
                     fontSize = 10.sp,
                     color = Color.Gray
@@ -257,7 +265,7 @@ class UserProfile {
                 fontSize = 15.sp,
                 color = Color.Gray,
                 modifier = Modifier
-                    .weight(1.0f)
+//                    .weight(1.0f)
                     .clickable {
                         //TODO 회원 탈퇴 기능 구현
 
