@@ -1,5 +1,6 @@
 package com.example.thanksd.userprofile
 
+import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -136,9 +138,16 @@ class UserProfile {
 
     @Composable
     fun Notification(){
-        var isMessageEnabled by remember { mutableStateOf(false) }
-        var isSoundEnabled by remember { mutableStateOf(false) }
-        var isVibrateEnabled by remember { mutableStateOf(false) }
+        val context = LocalContext.current
+        var isMessageEnabled by remember { mutableStateOf(
+            context.getSharedPreferences("MySettings",Context.MODE_PRIVATE).getBoolean("message",false)
+        ) }
+        var isSoundEnabled by remember { mutableStateOf(
+            context.getSharedPreferences("MySettings",Context.MODE_PRIVATE).getBoolean("sound",false)
+        ) }
+        var isVibrateEnabled by remember { mutableStateOf(
+            context.getSharedPreferences("MySettings",Context.MODE_PRIVATE).getBoolean("vibrate",false)
+        ) }
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
@@ -168,10 +177,15 @@ class UserProfile {
                     checked = isMessageEnabled,
                     modifier = Modifier.scale(0.6f),
                     onCheckedChange = { isChecked ->
+                        context.getSharedPreferences("MySettings", Context.MODE_PRIVATE)
+                            .edit()
+                            .putBoolean("message",isChecked)
+                            .apply()
                         isMessageEnabled = isChecked
                         if (isChecked) {
                             // 알림 설정
                             //TODO 알림 설정 기능
+                            // do nothing
 //                    enableNotification(context)
                         } else {
                             // 알림 해제
@@ -200,6 +214,10 @@ class UserProfile {
                     checked = isSoundEnabled,
                     modifier = Modifier.scale(0.6f),
                     onCheckedChange = { isChecked ->
+                        context.getSharedPreferences("MySettings", Context.MODE_PRIVATE)
+                            .edit()
+                            .putBoolean("sound",isChecked)
+                            .apply()
                         isSoundEnabled = isChecked
                         if (isChecked) {
                             // 알림 설정
@@ -231,6 +249,10 @@ class UserProfile {
                     checked = isVibrateEnabled,
                     modifier = Modifier.scale(0.6f),
                     onCheckedChange = { isChecked ->
+                        context.getSharedPreferences("MySettings", Context.MODE_PRIVATE)
+                            .edit()
+                            .putBoolean("vibrate",isChecked)
+                            .apply()
                         isVibrateEnabled = isChecked
                         if (isChecked) {
                             // 알림 설정
