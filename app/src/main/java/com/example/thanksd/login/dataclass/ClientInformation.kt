@@ -1,6 +1,6 @@
 package com.example.thanksd.login.dataclass
 object ClientInformation {
-    var token: String = "default"
+    var token: String = "-1"
     var email: String? = null
     var isRegistered = false
     var platformID = "no-info"
