@@ -1,4 +1,4 @@
-package com.example.thanksd.userprofile.ui.theme
+package com.example.thanksd.login.google.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

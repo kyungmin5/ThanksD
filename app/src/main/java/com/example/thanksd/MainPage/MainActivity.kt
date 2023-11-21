@@ -42,9 +42,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
 import com.example.thanksd.R
+import com.example.thanksd.userprofile.UserProfile
 import com.google.android.material.color.ColorResourcesOverride
+import okhttp3.internal.userAgent
 
-
+val userProfile = UserProfile() // userprofile composable fun 저장한 클래스
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +104,9 @@ fun Calendar() {
 @Composable
 fun sample(){
     Column (
-        modifier = Modifier.fillMaxSize().background(Color.White),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
@@ -115,6 +119,7 @@ fun sample(){
 /*바텀 네비게이션 구성*/
 @Composable
 fun Navigation(navController: NavHostController) {
+
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             // 메인 화면
@@ -130,7 +135,7 @@ fun Navigation(navController: NavHostController) {
         }
         composable("profile") {
             // 유저 프로필
-            sample()
+            userProfile.UserInfo()
         }
     }
 }

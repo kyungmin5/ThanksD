@@ -2,9 +2,13 @@ package com.example.thanksd.login.kakao
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.example.thanksd.httpconnection.HttpFunc
+import com.example.thanksd.httpconnection.JsonViewModel
+import com.example.thanksd.login.dataclass.ClientInformation
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -16,10 +20,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class KakaoAuthViewModel(application: Application) : AndroidViewModel(application) {
-    val serverurl = "http://43.202.215.181:8080/login/kakao"
-    val JsonObj :JSONObject = JSONObject()
-    val httpManager = HttpFunc(serverurl)
-
     companion object {
         const val TAG = "카카오어스"
     }
@@ -27,7 +27,7 @@ class KakaoAuthViewModel(application: Application) : AndroidViewModel(applicatio
     
     /* 될 경우 access token 전달 */
     val isLoggedIn = MutableStateFlow<String>("-1")
-    
+
     fun kakaoLogin(){
         viewModelScope.launch {
             isLoggedIn.emit(kakaoLoginHandler())
@@ -37,17 +37,15 @@ class KakaoAuthViewModel(application: Application) : AndroidViewModel(applicatio
     private suspend fun kakaoLoginHandler(): String =
         /* 토근 저장 코드 필요 (coroutine 으로 전달 (access token??))*/
         suspendCoroutine<String> { continuation ->
+
             // 카카오계정으로 로그인 공통 callback 구성
             // 카카오톡으로 로그인 할 수 없어 카카오계정으로 로그인할 경우 사용됨
             val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-
                 if (error != null) {
                     Log.e(TAG, "카카오계정으로 로그인 실패", error)
                     continuation.resume("-1")
                 } else if (token != null) {
-                    JsonObj.put("token",token.accessToken)
                     Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
-                    httpManager.POST(JsonObj)
                     continuation.resume(token.accessToken)
                 }
 

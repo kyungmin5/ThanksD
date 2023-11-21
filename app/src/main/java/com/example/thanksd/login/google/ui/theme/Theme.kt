@@ -1,4 +1,4 @@
-package com.example.thanksd.userprofile.ui.theme
+package com.example.thanksd.login.google.ui.theme
 
 import android.app.Activity
 import android.os.Build

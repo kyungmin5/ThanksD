@@ -27,13 +27,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
 import com.example.thanksd.MainPage.MainActivity
 import com.example.thanksd.R
+import com.example.thanksd.httpconnection.HttpFunc
+import com.example.thanksd.httpconnection.JsonViewModel
+import com.example.thanksd.login.dataclass.ClientInformation
+import com.example.thanksd.login.dataclass.ClientInformation.token
+import com.example.thanksd.login.google.GoogleLoginActivity
 import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme
 import com.kakao.sdk.common.util.Utility
+import org.json.JSONObject
 
 class LoginActivity : ComponentActivity() {
 
@@ -65,11 +73,29 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
     val context = LocalContext.current
     // 상태 저장
     val isLoggedIn = kakaoViewModel.isLoggedIn.collectAsState()
-
+    val serverurl = "http://43.202.215.181:8080/login/kakao"
     val accessToken = isLoggedIn.value // 실패시 "-1" 저장
+
+    // 네이버 로그인 viewmodel 구현
+    val JsonObj : JSONObject = JSONObject()
+    val httpManager = HttpFunc(serverurl)
+    val response = JsonViewModel()
+    val cur = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     LaunchedEffect(accessToken) {
         if (accessToken != "-1") {
-            // TODO: 여기에 새로운 Activity로 전환하는 로직을 구현하세요.
+            JsonObj.put("token", accessToken)
+            httpManager.POST(JsonObj,response)
+            response.response.observe(lifecycleOwner, Observer {response->
+                val data = JSONObject(response?.get("data").toString())
+                val token = data.get("token").toString()
+                val email = data.get("email").toString()
+                val isRegistered = data.get("isRegistered").toString().toBoolean()
+                val platformId = data.get("platformId").toString()
+                ClientInformation.updateValue(token,email,isRegistered,platformId)
+                Log.d("kakao_login", "로그인 성공")
+            })
             navigator(Intent(context, MainActivity::class.java)) // 다음 액티비티 이름 넣어야함
         }
     }
@@ -115,7 +141,8 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
                             .clickable {
                                 /* google 로그인 구현 */
 //                            viewModel.kakaoLogin()
-                                navigator(Intent(context, MainActivity::class.java))
+                                navigator(Intent(context, GoogleLoginActivity::class.java))
+//                                navigator(Intent(context, MainActivity::class.java))
                             }
                             .fillMaxSize(),
                         contentDescription = null
