@@ -43,6 +43,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.thanksd.R
 import com.example.thanksd.httpconnection.HttpFunc
 import com.example.thanksd.httpconnection.JsonViewModel
@@ -101,7 +103,7 @@ class UserProfile {
                 prefs.unregisterOnSharedPreferenceChangeListener(listener)
             }
         }
-        
+
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
@@ -350,6 +352,7 @@ class UserProfile {
                 Log.d("delete_code", code)
                 if (code == "200") {
                     Toast.makeText(context, "성공적으로 회원탈퇴 하셨습니다.", Toast.LENGTH_SHORT).show()
+                    deleteLoginState(context,false)
                     val intent = Intent(context, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     context.startActivity(intent)
@@ -360,6 +363,28 @@ class UserProfile {
                 Toast.makeText(context, "회원탈퇴에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+    fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        return EncryptedSharedPreferences.create(
+            context,
+            "UserLoginInfo",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+    fun deleteLoginState(context: Context, isLoggedIn: Boolean) {
+        // 새로 로그인 했을 때 호출
+        val encryptedPrefs = com.example.thanksd.login.getEncryptedSharedPreferences(context)
+        encryptedPrefs.edit().putBoolean("IsLoggedIn", isLoggedIn).apply()
+        encryptedPrefs.edit().putString("token","-1").apply()
+        encryptedPrefs.edit().putString("email",null).apply()
+        encryptedPrefs.edit().putString("platformID","no-info").apply()
+        encryptedPrefs.edit().putBoolean("isRegistered", false).apply()
     }
 
 
