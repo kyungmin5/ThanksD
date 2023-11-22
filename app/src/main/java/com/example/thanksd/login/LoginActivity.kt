@@ -3,7 +3,10 @@ package com.example.thanksd.login
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -45,7 +49,10 @@ import com.example.thanksd.login.google.GoogleLoginActivity
 import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme
 import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.common.util.Utility.getKeyHash
 import org.json.JSONObject
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 class LoginActivity : ComponentActivity() {
 
@@ -75,6 +82,7 @@ class LoginActivity : ComponentActivity() {
 @Composable
 fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
     val context = LocalContext.current
+    /*getKeyHash(context)*/
     // TODO 로그인 상태 유지
     // 로그인한 유저의 경우
     if(getLoginState(context)){
@@ -209,6 +217,20 @@ fun getLoginState(context: Context): Boolean {
     return encryptedPrefs.getBoolean("IsLoggedIn", false)
 }
 
+/*fun getKeyHash(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        val packageInfo = context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+        for (signature in packageInfo.signingInfo.apkContentsSigners) {
+            try {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("getKeyHash", "key hash: ${Base64.encodeToString(md.digest(), Base64.NO_WRAP)}")
+            } catch (e: NoSuchAlgorithmException) {
+                Log.w("getKeyHash", "Unable to get MessageDigest. signature=$signature", e)
+            }
+        }
+    }
+}*/
 
 /*
 @Preview(showBackground = true)
