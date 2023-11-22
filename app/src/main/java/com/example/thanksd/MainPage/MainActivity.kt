@@ -1,6 +1,7 @@
 package com.example.thanksd.MainPage
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.http.HttpResponseCache.install
 import android.os.Bundle
 import android.widget.CalendarView
@@ -29,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,6 +48,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
 import com.example.thanksd.R
+import com.example.thanksd.editor.EditorActivity
+import com.example.thanksd.userprofile.ChangeNameActivity
 import com.example.thanksd.userprofile.UserProfile
 import com.google.android.material.color.ColorResourcesOverride
 import okhttp3.internal.userAgent
@@ -69,6 +73,7 @@ fun Calendar() {
     var date by remember {
         mutableStateOf("")
     }
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -123,7 +128,8 @@ fun Calendar() {
                 // 우측 하단에 흰색 동그라미 아이콘 추가
                 FloatingActionButton(
                     onClick = {
-                        // 아이콘 클릭 시 수행할 동작 추가
+                        val intent = Intent(context, EditorActivity::class.java)
+                        context.startActivity(intent)
                     },
                     modifier = Modifier
                         .padding(16.dp, 0.dp, 16.dp, 16.dp) // + 버튼 여백 조절

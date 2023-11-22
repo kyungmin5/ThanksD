@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:windowSoftInputMode="adjustResize">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
     <application
         android:name=".login.kakao.KakaoLogin"
@@ -27,18 +36,15 @@
             android:label="@string/title_activity_google_login"
             android:theme="@style/Theme.ThanksD" />
         <activity
-            android:name=".login.LoginActivity"
-            android:exported="true"
+            android:name=".editor.EditorActivity"
+            android:exported="false"
+            android:label="@string/title_activity_editor"
             android:theme="@style/Theme.ThanksD">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".MainPage.MainActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.ThanksD" />
         <activity
@@ -46,6 +52,18 @@
             android:exported="true"
             android:label="@string/title_activity_diaryentry"
             android:theme="@style/Theme.ThanksD" />
+
+        <activity
+            android:name=".login.LoginActivity"
+            android:exported="true"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.ThanksD">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+        </activity>
+
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true"
@@ -63,5 +81,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
