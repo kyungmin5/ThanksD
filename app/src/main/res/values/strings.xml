@@ -6,4 +6,8 @@
     <string name="title_activity_user_profile">UserProfileActivity</string>
     <string name="title_activity_google_login">GoogleLoginActivity</string>
     <string name="title_activity_change_name">ChangeNameActivity</string>
+    <string name="title_activity_editor">EditorActivity</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_no_permission_screen">NoPermissionScreen</string>
+    <string name="title_activity_canvas">CanvasActivity</string>
 </resources>
