@@ -20,6 +20,10 @@ android {
         versionName "1.0"
         buildConfigField "String","API_KEY",properties["Native_App_Key"]
         resValue "string","oauth_host",properties["kakao_oauth_host"]
+
+        buildConfigField "String","Redirecturl",properties["redirecturl"]
+        buildConfigField "String","Client_id",properties["client_id"]
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -43,7 +47,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.2"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packagingOptions {
         resources {
@@ -72,8 +76,10 @@ dependencies {
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.material:material'
     implementation platform('androidx.compose:compose-bom:2022.10.00')
-    implementation platform('androidx.compose:compose-bom:2022.10.00')
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.9'
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -81,6 +87,8 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
@@ -94,4 +102,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:22.0.0'
     implementation 'com.google.firebase:firebase-bom:32.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
+
+    /*로그인 상태 유지*/
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
 }

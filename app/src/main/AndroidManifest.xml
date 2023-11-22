@@ -17,17 +17,22 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".userprofile.UserProfileActivity"
+            android:name=".userprofile.ChangeNameActivity"
             android:exported="false"
-            android:label="@string/title_activity_user_profile"
+            android:label="@string/title_activity_change_name"
+            android:theme="@style/Theme.ThanksD" />
+        <activity
+            android:name=".login.google.GoogleLoginActivity"
+            android:exported="true"
+            android:label="@string/title_activity_google_login"
             android:theme="@style/Theme.ThanksD" />
         <activity
             android:name=".login.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_login"
             android:theme="@style/Theme.ThanksD">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,14 +40,12 @@
             android:name=".MainPage.MainActivity"
             android:exported="true"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.ThanksD" >
-        </activity>
-        <activity android:name=".MainPage.DiaryEntryActivity"
+            android:theme="@style/Theme.ThanksD" />
+        <activity
+            android:name=".MainPage.DiaryEntryActivity"
             android:exported="true"
             android:label="@string/title_activity_diaryentry"
-            android:theme="@style/Theme.ThanksD" >
-        </activity>
-
+            android:theme="@style/Theme.ThanksD" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true"

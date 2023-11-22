@@ -1,9 +1,14 @@
 package com.example.thanksd.login.dataclass
+object ClientInformation {
+    var token: String = "-1"
+    var email: String? = null
+    var isRegistered = false
+    var platformID = "no-info"
 
-class ClientInformation (){
-    companion object {
-        val CLIENT_SECRET: String = ""
-        val CLIENT_ID: String = ""
+    fun updateValue(token:String,email:String?,isRegistered:Boolean,platformID:String) {
+        this.token = token
+        this.email = email
+        this.isRegistered = isRegistered
+        this.platformID = platformID
     }
-
 }
