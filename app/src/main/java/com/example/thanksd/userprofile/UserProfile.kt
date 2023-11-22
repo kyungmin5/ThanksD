@@ -2,6 +2,7 @@ package com.example.thanksd.userprofile
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -23,6 +24,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +43,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.thanksd.R
 import com.example.thanksd.httpconnection.HttpFunc
 import com.example.thanksd.httpconnection.JsonViewModel
@@ -75,9 +80,30 @@ class UserProfile {
             }
         }
     }
-
+    fun getSharedPrefValue(context: Context): String {
+        val prefs = context.getSharedPreferences("UserName",Context.MODE_PRIVATE)
+        return prefs.getString("name", "건붕이") ?: "건붕이"
+    }
     @Composable
     fun userData(){
+        val context = LocalContext.current
+//        var text by remember { mutableStateOf(
+//            context.getSharedPreferences("UserName",Context.MODE_PRIVATE).getString("name","건붕이")
+//        ) }
+        var text by remember { mutableStateOf(getSharedPrefValue(context)) }
+
+        // `SharedPreferences` 변경 리스너 설정
+        DisposableEffect(Unit) {
+            val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+                text = getSharedPrefValue(context)
+            }
+            val prefs = context.getSharedPreferences("UserName", Context.MODE_PRIVATE)
+            prefs.registerOnSharedPreferenceChangeListener(listener)
+            onDispose {
+                prefs.unregisterOnSharedPreferenceChangeListener(listener)
+            }
+        }
+
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
@@ -85,7 +111,9 @@ class UserProfile {
             /* user image 코드 필요 */
             Image(
                 painterResource(id = R.drawable.default_user_img),
-                modifier = Modifier.width(38.dp).height(38.dp),
+                modifier = Modifier
+                    .width(38.dp)
+                    .height(38.dp),
                 contentDescription = null
             )
 
@@ -97,7 +125,7 @@ class UserProfile {
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ){
                 Text(
-                    text = "건붕이", //TODO 유저 닉네임 지정 형식?
+                    text = text!!, //TODO 유저 닉네임 지정 형식?
                     textAlign = TextAlign.Start,
                     fontSize = 20.sp)
                 Text(
@@ -114,6 +142,7 @@ class UserProfile {
 
     @Composable
     fun Account(){
+        val context = LocalContext.current
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(3.dp)
@@ -131,6 +160,8 @@ class UserProfile {
                 color = Color.Gray,
                 modifier = Modifier.clickable {
                     //TODO 클릭시 기능 구현
+                    val intent = Intent(context, ChangeNameActivity::class.java)
+                    context.startActivity(intent)
                 }
             )
             Text(
@@ -321,7 +352,9 @@ class UserProfile {
                 Log.d("delete_code", code)
                 if (code == "200") {
                     Toast.makeText(context, "성공적으로 회원탈퇴 하셨습니다.", Toast.LENGTH_SHORT).show()
+                    deleteLoginState(context,false)
                     val intent = Intent(context, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     context.startActivity(intent)
                 } else {
                     Toast.makeText(context, "회원탈퇴에 실패했습니다.", Toast.LENGTH_SHORT).show()
@@ -331,7 +364,28 @@ class UserProfile {
             }
         })
     }
+    fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
 
+        return EncryptedSharedPreferences.create(
+            context,
+            "UserLoginInfo",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+    fun deleteLoginState(context: Context, isLoggedIn: Boolean) {
+        // 새로 로그인 했을 때 호출
+        val encryptedPrefs = com.example.thanksd.login.getEncryptedSharedPreferences(context)
+        encryptedPrefs.edit().putBoolean("IsLoggedIn", isLoggedIn).apply()
+        encryptedPrefs.edit().putString("token","-1").apply()
+        encryptedPrefs.edit().putString("email",null).apply()
+        encryptedPrefs.edit().putString("platformID","no-info").apply()
+        encryptedPrefs.edit().putBoolean("isRegistered", false).apply()
+    }
 
 
 }

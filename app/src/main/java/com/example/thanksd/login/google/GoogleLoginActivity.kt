@@ -1,7 +1,9 @@
 package com.example.thanksd.login.google
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -24,6 +26,8 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.thanksd.BuildConfig
 import com.example.thanksd.MainPage.MainActivity
 import com.example.thanksd.httpconnection.HttpFunc
@@ -70,10 +74,12 @@ fun GoogleLoginScreen() {
 //    cookieManager.flush()
     LaunchedEffect(check.value){
         if(check.value == 1){
-            if(ClientInformation.isRegistered)
+            com.example.thanksd.login.saveLoginState(cur, true)
+            if(ClientInformation.isRegistered) {
                 cur.startActivity(Intent(cur, MainActivity::class.java))
-            else{
-
+            }
+            else{ // 최초 회원가입
+                cur.startActivity(Intent(cur, MainActivity::class.java))
             }
         }else if(check.value == 0){
             cur.startActivity(Intent(cur, LoginActivity::class.java))
@@ -139,6 +145,28 @@ fun GoogleLoginScreen() {
         check.value = 1
         Log.d("check12", ClientInformation.platformID)
     })
+}
+fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
+    val masterKey = MasterKey.Builder(context)
+        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+        .build()
+
+    return EncryptedSharedPreferences.create(
+        context,
+        "UserLoginInfo",
+        masterKey,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+}
+fun saveLoginState(context: Context, isLoggedIn: Boolean) {
+    // 새로 로그인 했을 때 호출
+    val encryptedPrefs = com.example.thanksd.login.getEncryptedSharedPreferences(context)
+    encryptedPrefs.edit().putBoolean("IsLoggedIn", isLoggedIn).apply()
+    encryptedPrefs.edit().putString("token",ClientInformation.token).apply()
+    encryptedPrefs.edit().putString("email",ClientInformation.email).apply()
+    encryptedPrefs.edit().putString("platformID",ClientInformation.platformID).apply()
+    encryptedPrefs.edit().putBoolean("isRegistered", ClientInformation.isRegistered).apply()
 }
 
 
