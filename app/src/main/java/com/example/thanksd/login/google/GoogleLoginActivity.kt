@@ -38,6 +38,7 @@ import com.example.thanksd.login.google.ui.theme.ThanksDTheme
 
 
 import org.json.JSONObject
+import java.time.LocalDate
 
 class GoogleLoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -167,6 +168,8 @@ fun saveLoginState(context: Context, isLoggedIn: Boolean) {
     encryptedPrefs.edit().putString("email",ClientInformation.email).apply()
     encryptedPrefs.edit().putString("platformID",ClientInformation.platformID).apply()
     encryptedPrefs.edit().putBoolean("isRegistered", ClientInformation.isRegistered).apply()
+    val date = LocalDate.now().toString()
+    encryptedPrefs.edit().putString("loginDate",date).apply()
 }
 
 
