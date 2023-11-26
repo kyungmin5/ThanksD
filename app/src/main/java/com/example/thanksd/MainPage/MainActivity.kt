@@ -49,6 +49,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
 import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.R
+import com.example.thanksd.asmr.Healing
 import com.example.thanksd.editor.EditorActivity
 import com.example.thanksd.userprofile.ChangeNameActivity
 import com.example.thanksd.userprofile.UserProfile
@@ -56,6 +57,7 @@ import com.google.android.material.color.ColorResourcesOverride
 import okhttp3.internal.userAgent
 
 val userProfile = UserProfile() // userprofile composable fun 저장한 클래스
+val healing = Healing()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -184,9 +186,9 @@ fun Navigation(navController: NavHostController) {
             // 대시보드
             sample()
         }
-        composable("??") {
+        composable("healing") {
             // 세번째 ?
-            sample()
+            healing.healing()
         }
         composable("profile") {
             // 유저 프로필
@@ -263,8 +265,8 @@ fun Screen(navController: NavHostController){
                         badgeCount = 24
                     ),
                     BottomNavItem(
-                        name = "???",
-                        route = "??",
+                        name = "Healing",
+                        route = "healing",
                     ),
                     BottomNavItem(
                         name = "User-profile",

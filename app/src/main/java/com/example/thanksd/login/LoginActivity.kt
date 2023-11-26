@@ -54,6 +54,8 @@ import com.kakao.sdk.common.util.Utility.getKeyHash
 import org.json.JSONObject
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.time.LocalDate
+import java.time.Period
 
 
 class LoginActivity : ComponentActivity() {
@@ -212,11 +214,35 @@ fun saveLoginState(context: Context, isLoggedIn: Boolean) {
     encryptedPrefs.edit().putString("email",ClientInformation.email).apply()
     encryptedPrefs.edit().putString("platformID",ClientInformation.platformID).apply()
     encryptedPrefs.edit().putBoolean("isRegistered", ClientInformation.isRegistered).apply()
+    val date = LocalDate.now().toString()
+    encryptedPrefs.edit().putString("loginDate",date).apply()
+    Log.d("date",date)
+    val datelist = date.split("-")
+    val date2= LocalDate.of(datelist[0].toInt(),datelist[1].toInt(),datelist[2].toInt())
+    Log.d("date",date2.toString())
 }
 
 fun getLoginState(context: Context): Boolean {
     val encryptedPrefs = getEncryptedSharedPreferences(context)
-    return encryptedPrefs.getBoolean("IsLoggedIn", false)
+    var state = true
+    var datestr = encryptedPrefs.getString("loginDate","2021-12-12")
+    val datelist = datestr!!.split("-")
+    val date= LocalDate.of(datelist[0].toInt(),datelist[1].toInt(),datelist[2].toInt())
+    val date2 = LocalDate.now()
+    val period = Period.between(date,date2)
+    if(period.years > 0){
+        state = false
+    }
+    if(period.months>0){
+        state = false
+    }
+    if(period.days>=6){
+        state = false
+    }
+
+    encryptedPrefs.getBoolean("IsLoggedIn", false)
+
+    return encryptedPrefs.getBoolean("IsLoggedIn", false) and state
 }
 
 /*fun getKeyHash(context: Context) {
