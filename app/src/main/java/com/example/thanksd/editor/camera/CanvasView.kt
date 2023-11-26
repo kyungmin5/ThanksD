@@ -1,13 +1,9 @@
 package com.example.thanksd.editor.camera
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
+import android.graphics.Bitmap
+import android.view.Gravity
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -16,40 +12,26 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Download
-import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,42 +39,66 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.font.FontVariation.width
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thanksd.editor.camera.data.TextElementState
-import com.example.thanksd.editor.camera.ui.theme.ThanksDTheme
-import com.google.android.material.color.utilities.MaterialDynamicColors.background
+import com.example.thanksd.editor.camera.data.TextElementsViewModel
+import com.smarttoolfactory.screenshot.ImageResult
 import com.smarttoolfactory.screenshot.ScreenshotBox
 import com.smarttoolfactory.screenshot.rememberScreenshotState
-import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 fun CanvasView(
+    viewModel: TextElementsViewModel = koinViewModel(),
     resetCallback: () -> Unit,
     background: @Composable () -> Unit,
 ){
+    val textElemListState by viewModel.textElemListState.collectAsState()
+    val screenshotState = rememberScreenshotState()
+    val imageResult: ImageResult = screenshotState.imageState.value
+    val context = LocalContext.current
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Canvas(background = {background()})
+        ScreenshotBox(screenshotState = screenshotState) {
+            Canvas(textElemListState = textElemListState, background = { background() })
+            when (imageResult) {
+                is ImageResult.Success -> {
+                    screenshotState.imageBitmap?.let{
+                       val onSaveToGallery =  viewModel::storePhotoInGallery
+                        onSaveToGallery(screenshotState.imageBitmap!!.asAndroidBitmap())
+                    }
+                    val toast =  Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0)
+                    toast.show()
+
+
+                    // Image(bitmap = imageResult.data.asImageBitmap(), contentDescription = null)
+                }
+                is ImageResult.Error -> {
+                    val toast = Toast.makeText(context,"Error: ${imageResult.exception.message}", Toast.LENGTH_SHORT)
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0)
+                    toast.show()
+                }
+                else -> {}
+            }
+        }
         IconButton(
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -101,6 +107,7 @@ fun CanvasView(
                 .size(45.dp),
             onClick = {
                 resetCallback()
+                viewModel.clearTextElementState()
             },
         ){
             Icon(modifier = Modifier.size(34.dp), imageVector = Icons.Rounded.ArrowBack, contentDescription = "Editor Back icon", tint=Color.White)
@@ -119,6 +126,8 @@ fun CanvasView(
                     .background(Color.DarkGray, CircleShape)
                     .size(45.dp),
                 onClick = {
+                    val newTextElementState = TextElementState(text="New Text", position=Offset(0f, 0f))
+                    viewModel.addTextElementState(newTextElementState)
                 },
             ){
                 Icon(modifier = Modifier.size(32.dp), imageVector = Icons.Rounded.TextFields, contentDescription = "Text Add icon", tint=Color.White)
@@ -129,16 +138,48 @@ fun CanvasView(
                     .background(Color.DarkGray, CircleShape)
                     .size(45.dp),
                 onClick = {
+                    screenshotState.capture()
                 },
             ){
                 Icon(modifier = Modifier.size(32.dp), imageVector = Icons.Rounded.Download, contentDescription = "Download Picture icon", tint=Color.White)
             }
         }
 
-
     }
 
 }
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun Canvas(
+    textElemListState: List<TextElementState>,
+    background: @Composable () -> Unit,
+){
+    val kc = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .pointerInput(Unit) {
+            detectTapGestures(
+                onTap = {
+                    focusManager.clearFocus()
+                    kc?.hide()
+                }
+            )
+        }){
+        background()
+        textElemListState.forEach { textElementState ->
+            TextElement(
+                initialText = textElementState.text,
+                positionOffset = textElementState.position
+            )
+        }
+    }
+
+}
+
 
 @Composable
 fun CanvasRowController(){
@@ -166,31 +207,7 @@ fun CanvasRowController(){
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun Canvas(
-    background: @Composable () -> Unit,
-){
-    val screenshotState = rememberScreenshotState()
-    val textElements = remember { mutableStateListOf<TextElementState>() }
-    val kc = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    ScreenshotBox(screenshotState = screenshotState) {
-        Box(modifier = Modifier.fillMaxSize().pointerInput(Unit){
-            detectTapGestures(
-                onTap = {
-                    focusManager.clearFocus()
-                    kc?.hide()
-                }
-            )
-        }){
-            background()
 
-        }
-
-    }
-
-}
 @Composable
 fun TextElement(
     initialText: String = "",
@@ -238,13 +255,15 @@ fun TextFieldElement(
     BasicTextField(
         value = text,
         onValueChange = { text = it },
-        modifier = Modifier.width(IntrinsicSize.Min)
+        modifier = Modifier
+            .width(IntrinsicSize.Min)
             .drawBehind {
                 drawRoundRect(
-                Color.White,
-                cornerRadius = CornerRadius(10.dp.toPx())
+                    Color.White,
+                    cornerRadius = CornerRadius(10.dp.toPx())
                 )
-            }.padding(15.dp, 7.dp)
+            }
+            .padding(15.dp, 7.dp)
     )
 
 }
@@ -275,3 +294,4 @@ fun TextFieldElement(
 //            .transformable(state = transformState)
 //            .background(Color.White)
 //        )
+
