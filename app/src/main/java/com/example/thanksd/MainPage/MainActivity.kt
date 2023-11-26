@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.http.HttpResponseCache.install
 import android.os.Bundle
+import android.util.Log
 import android.widget.CalendarView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,20 +42,29 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+//import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.bumptech.glide.Glide
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
+import com.example.thanksd.MainPage.dataclass.DiaryItem
 import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.R
+import com.example.thanksd.Retrofit.RetrofitClient
 import com.example.thanksd.editor.EditorActivity
+import com.example.thanksd.httpconnection.DiaryService
+import com.example.thanksd.login.dataclass.ClientInformation
 import com.example.thanksd.userprofile.ChangeNameActivity
 import com.example.thanksd.userprofile.UserProfile
 import com.google.android.material.color.ColorResourcesOverride
+import kotlinx.coroutines.CoroutineScope
 import okhttp3.internal.userAgent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 val userProfile = UserProfile() // userprofile composable fun 저장한 클래스
 class MainActivity : ComponentActivity() {
@@ -74,7 +85,11 @@ fun Calendar() {
     var date by remember {
         mutableStateOf("")
     }
+    var diaries by remember {
+        mutableStateOf<List<DiaryItem>?>(null)
+    }
     val context = LocalContext.current
+    Log.d("check123", ClientInformation.token)
 
     Scaffold(
         topBar = {
@@ -110,24 +125,45 @@ fun Calendar() {
                 // 캘린더 뷰 위에 무작위 명언과 작가 이름을 포함한 상자 추가
                 RandomQuoteBox()
 
+                // 캘린더 뷰 업데이트하는 로직
+                val diaryService = DiaryService()
+
+
                 AndroidView(
                     factory = { context ->
                         CalendarView(context).apply {
                             setBackgroundColor(0xFFFFFFFF.toInt())
-                            setPadding(5, 5, 5, 5)
+                            setPadding(5, 5, 5, 0)
                         }
                     },
                     update = { calendarView ->
                         calendarView.setOnDateChangeListener { _, year, month, day ->
-                            date = "$year - ${month + 1} - $day"
+                            val formattedDate = String.format("%d-%02d-%02d", year, month + 1, day)
+                            date = formattedDate
+
+                            /*viewModelScope.launch {
+                                diaries = fetchDiariesByDate(formattedDate)
+                                // 여기서 diaries를 사용하여 UI를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
+                            }*/
                         }
                     },
                     modifier = Modifier
-                        .aspectRatio(1f)
+                        .aspectRatio(1.1f)
                         .border(3.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
-                        .padding(bottom = 16.dp) // 캘린더뷰 아래 여백 추가
+                        .padding(bottom = 5.dp) // 캘린더뷰 아래 여백 추가
                 )
-                Text(text = date)
+                // 이미지 목록을 보여줄 화면으로 네비게이션
+                diaries?.let { diaryList ->
+                    if (diaryList.isNotEmpty()) {
+                        // 이미지 목록이 비어 있지 않을 때 화면 이동
+                        ShowDiaryImages(diaryList = diaryList) { imageUrl ->
+                            // Glide를 사용하여 이미지 띄우기
+                            Glide.with(context)
+                                .load(imageUrl)
+                                //.into(imageView)
+                        }
+                    }
+                }
 
                 // 우측 하단에 흰색 동그라미 아이콘 추가
                 FloatingActionButton(
@@ -136,7 +172,7 @@ fun Calendar() {
                         context.startActivity(intent)
                     },
                     modifier = Modifier
-                        .padding(16.dp, 0.dp, 16.dp, 16.dp) // + 버튼 여백 조절
+                        .padding(10.dp, 0.dp, 16.dp, 16.dp) // + 버튼 여백 조절
                         .size(45.dp)
                         .background(Color.Transparent, shape = CircleShape)
                         .border(1.dp, Color.LightGray, shape = CircleShape)
@@ -155,6 +191,11 @@ fun Calendar() {
     )
 }
 
+@Composable
+fun ShowDiaryImages(diaryList: List<DiaryItem>, onImageClick: (String) -> Unit) {
+    // 여기서 diaryList를 기반으로 이미지 목록을 표시하고, 클릭 이벤트 처리
+    // 예시로 이미지 클릭시 onImageClick를 호출하여 Glide로 이미지를 띄워줄 수 있습니다.
+}
 
 @Composable
 fun sample(){
@@ -318,6 +359,23 @@ fun getRandomQuote(): Quote {
     return QuotesData.quotesList[randomIndex]
 }
 
+// Retrofit으로 네트워크 요청
+suspend fun fetchDiariesByDate(date: String): List<DiaryItem>? {
+    return withContext(Dispatchers.IO) {
+        try {
+            val response = RetrofitClient.diaryService.getDiariesByDate(date)
+            if (response.code == "200" && response.data != null) {
+                response.data.diaryList
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            // 네트워크 오류 또는 예외 처리
+            e.printStackTrace()
+            null
+        }
+    }
+}
 
 @Preview
 @Composable
