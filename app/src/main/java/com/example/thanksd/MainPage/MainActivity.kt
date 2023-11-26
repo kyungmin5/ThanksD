@@ -47,6 +47,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
+import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.R
 import com.example.thanksd.editor.EditorActivity
 import com.example.thanksd.userprofile.ChangeNameActivity
@@ -97,14 +98,17 @@ fun Calendar() {
                 // 위쪽 고정 텍스트 창
                 Text(
                     text = "Hi, user12! How's your day going? Here is Today's quotes for you :)",
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.Transparent, shape = RoundedCornerShape(8.dp))
-                        .padding(16.dp)
+                        .padding(8.dp)
                 )
+
+                // 캘린더 뷰 위에 무작위 명언과 작가 이름을 포함한 상자 추가
+                RandomQuoteBox()
 
                 AndroidView(
                     factory = { context ->
@@ -133,7 +137,7 @@ fun Calendar() {
                     },
                     modifier = Modifier
                         .padding(16.dp, 0.dp, 16.dp, 16.dp) // + 버튼 여백 조절
-                        .size(56.dp)
+                        .size(45.dp)
                         .background(Color.Transparent, shape = CircleShape)
                         .border(1.dp, Color.LightGray, shape = CircleShape)
                         .align(Alignment.End),
@@ -277,6 +281,43 @@ fun Screen(navController: NavHostController){
         Navigation(navController = navController)
     }
 }
+
+@Composable
+fun RandomQuoteBox() {
+    val quote = remember { getRandomQuote() } // QuotesData에서 무작위 명언 가져오기
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .background(Color(0xFFB8805d), shape = RoundedCornerShape(8.dp))
+            .padding(8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(bottom = 4.dp)
+                .align(Alignment.BottomStart)
+        ) {
+            Text(
+                text = quote.content,
+                fontSize = 16.sp,
+                color = Color.White
+            )
+            Text(
+                text = "- ${quote.author}",
+                fontSize = 12.sp,
+                color = Color(0xFF006400) // 짙은 초록색
+            )
+        }
+    }
+}
+
+// QuotesData에서 무작위 명언과 작가 이름을 가져오는 함수
+fun getRandomQuote(): Quote {
+    val randomIndex = (0 until QuotesData.quotesList.size).random()
+    return QuotesData.quotesList[randomIndex]
+}
+
 
 @Preview
 @Composable
