@@ -62,58 +62,58 @@ class Healing {
                 verticalArrangement = Arrangement.spacedBy(30.dp) // 간격 30dp
             ){
                 //TODO 화면 구성 함수 호출
+                Text(
+                    text = "Today's Quotes",
+                    textAlign = TextAlign.Start,
+                    fontSize = 25.sp)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp)
+                        .height(120.dp)
                 ){
-                    Text(
-                        text = "Today's Quotes",
-                        textAlign = TextAlign.Start,
-                        fontSize = 25.sp)
                     //TODO today's quote 띄울 컴포저블 함수 구현
                     todayQuotes()
                 }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                ){
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    )
-                    {
-                        Text(
-                            text = "Quotes",
-                            textAlign = TextAlign.Start,
-                            fontSize = 25.sp)
-                        Spacer(modifier = Modifier.weight(1.0F,true))
-                        Text(
-                            text = "more >",
-                            textAlign = TextAlign.Start,
-                            fontSize = 15.sp,
-                            color = Color.Gray,
-                            modifier = Modifier.clickable {
-                                //TODO 클릭시 기능 구현 (quote 상세 페이지)
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    Text(
+                        text = "Quotes",
+                        textAlign = TextAlign.Start,
+                        fontSize = 25.sp)
+                    Spacer(modifier = Modifier.weight(1.0F,true))
+                    Text(
+                        text = "more >",
+                        textAlign = TextAlign.Start,
+                        fontSize = 15.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.clickable {
+                            //TODO 클릭시 기능 구현 (quote 상세 페이지)
 //                                val intent = Intent(context, ChangeNameActivity::class.java)
 //                                context.startActivity(intent)
-                            }
-                        )
+                        }
+                    )
 
-                    }
-                    //TODO quote 띄울 컴포저블 함수 구현
-                    quotes()
                 }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(120.dp)
+                ){
+                    //TODO quote 띄울 컴포저블 함수 구현
+                    quotes()
+                }
+                Text(
+                    text = "Sounds",
+                    textAlign = TextAlign.Start,
+                    fontSize = 25.sp)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .height(150.dp)
                 ){
-                    Text(
-                        text = "Sounds",
-                        textAlign = TextAlign.Start,
-                        fontSize = 25.sp)
                     //TODO Asmr 구현
                     asmr()
                 }
@@ -147,6 +147,7 @@ class Healing {
             ExoPlayer.Builder(context)
                 .build()
                 .apply {
+                    //TODO uri 연결해야함
                     setMediaItem(MediaItem.fromUri("https://firebasestorage.googleapis.com/v0/b/jetcalories.appspot.com/o/FROM%20EARTH%20TO%20SPACE%20_%20Free%20HD%20VIDEO%20-%20NO%20COPYRIGHT.mp4?alt=media&token=68bce5a0-7ca7-4538-9fea-98d0dc2d3646"))
                     prepare()
                     play()
