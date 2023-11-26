@@ -182,10 +182,17 @@ dependencies {
     /*로그인 상태 유지*/
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
-
     /* exoplayer */
     def media3_version = "1.0.0-rc01"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
+    
+    /* Retrofit for HTTP Request */
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    /* Logging Interceptor for HTTP Request */
+    implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
+
 }

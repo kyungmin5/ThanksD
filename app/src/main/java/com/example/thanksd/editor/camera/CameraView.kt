@@ -1,6 +1,7 @@
 
 package com.example.thanksd.editor.camera
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -27,19 +28,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.FlipCameraIos
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.rounded.Camera
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FlipCameraIos
 import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.thanksd.editor.camera.utils.rotateBitmap
 import java.nio.ByteBuffer
 import java.util.concurrent.Executor
@@ -49,16 +57,37 @@ fun CameraPreview(
     controller: LifecycleCameraController,
     modifier: Modifier = Modifier
 ) {
+    // 카메라 보여 주는 뷰
     val lifecycleOwner = LocalLifecycleOwner.current
-    AndroidView(
-        modifier = modifier,
-        factory = {
-            PreviewView(it).apply {
-                this.controller = controller
-                controller.bindToLifecycle(lifecycleOwner)
+    val activity = (LocalContext.current as? Activity)
+    Box(modifier = Modifier.fillMaxWidth()){
+        AndroidView(
+            modifier = modifier,
+            factory = {
+                PreviewView(it).apply {
+                    this.controller = controller
+                    controller.bindToLifecycle(lifecycleOwner)
+                }
+            }
+        )
+        Row(
+            modifier= Modifier
+                .align(Alignment.TopStart)
+                .offset(12.dp, 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ){
+            IconButton(
+                modifier = Modifier
+                    .size(45.dp),
+                onClick = {
+                    activity?.finish()
+                },
+            ){
+                Icon(modifier = Modifier.size(32.dp), imageVector = Icons.Rounded.Close, contentDescription = "Text Add icon", tint=Color.White)
             }
         }
-    )
+    }
 }
 
 
@@ -110,7 +139,6 @@ fun CameraRowController(
                         CameraSelector.DEFAULT_FRONT_CAMERA
                     } else CameraSelector.DEFAULT_BACK_CAMERA
             },
-
             ){
             Icon( modifier = Modifier.size(35.dp), imageVector = Icons.Rounded.FlipCameraIos, contentDescription = "Camera Converter icon", tint=Color.DarkGray)
         }
