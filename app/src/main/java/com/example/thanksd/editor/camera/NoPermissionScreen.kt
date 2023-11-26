@@ -39,7 +39,5 @@ import com.example.thanksd.editor.camera.ui.theme.ThanksDTheme
 @Preview
 @Composable
 private fun Preview_NoPermissionContent() {
-    NoPermissionScreen(
-        onRequestPermission = {}
-    )
+    NoPermissionScreen(onRequestPermission = {})
 }
