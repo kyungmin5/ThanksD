@@ -48,7 +48,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.bumptech.glide.Glide
+//import com.bumptech.glide.Glide
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
 import com.example.thanksd.MainPage.dataclass.DiaryItem
 import com.example.thanksd.MainPage.dataclass.Quote
@@ -153,7 +153,7 @@ fun Calendar() {
                         .padding(bottom = 5.dp) // 캘린더뷰 아래 여백 추가
                 )
                 // 이미지 목록을 보여줄 화면으로 네비게이션
-                diaries?.let { diaryList ->
+                /*diaries?.let { diaryList ->
                     if (diaryList.isNotEmpty()) {
                         // 이미지 목록이 비어 있지 않을 때 화면 이동
                         ShowDiaryImages(diaryList = diaryList) { imageUrl ->
@@ -163,7 +163,7 @@ fun Calendar() {
                                 //.into(imageView)
                         }
                     }
-                }
+                }*/
 
                 // 우측 하단에 흰색 동그라미 아이콘 추가
                 FloatingActionButton(

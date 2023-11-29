@@ -85,14 +85,6 @@ dependencies {
 
     implementation 'com.github.SmartToolFactory:Compose-Screenshot:1.0.3'
 
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-
-    //Retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:7.4.2"
-
 
     //// CAMERA  ////
     // CameraX core library using the camera2 implementation
@@ -190,10 +182,17 @@ dependencies {
     /*로그인 상태 유지*/
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
+    /* exoplayer */
+    def media3_version = "1.0.0-rc01"
+    implementation "androidx.media3:media3-exoplayer:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
+    implementation "androidx.media3:media3-ui:$media3_version"
+
     /* Retrofit for HTTP Request */
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     /* Logging Interceptor for HTTP Request */
     implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
+
 }
