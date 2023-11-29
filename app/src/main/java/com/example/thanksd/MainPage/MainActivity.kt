@@ -42,17 +42,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-//import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-//import com.bumptech.glide.Glide
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
 import com.example.thanksd.MainPage.dataclass.DiaryItem
 import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.R
+import com.example.thanksd.asmr.Healing
 import com.example.thanksd.Retrofit.RetrofitClient
 import com.example.thanksd.editor.EditorActivity
 import com.example.thanksd.httpconnection.DiaryService
@@ -67,6 +67,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 val userProfile = UserProfile() // userprofile composable fun 저장한 클래스
+val healing = Healing()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -225,9 +226,9 @@ fun Navigation(navController: NavHostController) {
             // 대시보드
             sample()
         }
-        composable("??") {
+        composable("healing") {
             // 세번째 ?
-            sample()
+            healing.healing()
         }
         composable("profile") {
             // 유저 프로필
@@ -304,8 +305,8 @@ fun Screen(navController: NavHostController){
                         badgeCount = 24
                     ),
                     BottomNavItem(
-                        name = "???",
-                        route = "??",
+                        name = "Healing",
+                        route = "healing",
                     ),
                     BottomNavItem(
                         name = "User-profile",

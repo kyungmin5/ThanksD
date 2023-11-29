@@ -385,6 +385,7 @@ class UserProfile {
         encryptedPrefs.edit().putString("email",null).apply()
         encryptedPrefs.edit().putString("platformID","no-info").apply()
         encryptedPrefs.edit().putBoolean("isRegistered", false).apply()
+        encryptedPrefs.edit().putString("loginDate","2020-12-12").apply()
     }
 
 
