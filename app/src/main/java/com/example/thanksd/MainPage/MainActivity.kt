@@ -1,6 +1,7 @@
 package com.example.thanksd.MainPage
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.http.HttpResponseCache.install
 import android.os.Bundle
@@ -50,6 +51,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.thanksd.MainPage.dataclass.BottomNavItem
 import com.example.thanksd.MainPage.dataclass.DiaryItem
+import com.example.thanksd.MainPage.dataclass.DiaryResponse
+import com.example.thanksd.MainPage.dataclass.DiaryResponseByMonth
 import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.R
 import com.example.thanksd.asmr.Healing
@@ -65,14 +68,25 @@ import okhttp3.internal.userAgent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 val userProfile = UserProfile() // userprofile composable fun 저장한 클래스
 val healing = Healing()
+var datelist = ArrayList<String>()
+var diarydataList = ArrayList<DiaryItem>()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val (year, month) = getCurrentYearAndMonth()
         setContent {
 //            Calendar()
+            getDateByMonth(year, month, LocalContext.current)
+            getDiaryByDate("2023-11-26", LocalContext.current)
+
             val navController = rememberNavController()
             Screen(navController)
         }
@@ -360,22 +374,133 @@ fun getRandomQuote(): Quote {
     return QuotesData.quotesList[randomIndex]
 }
 
-// Retrofit으로 네트워크 요청
-suspend fun fetchDiariesByDate(date: String): List<DiaryItem>? {
-    return withContext(Dispatchers.IO) {
-        try {
-            val response = RetrofitClient.diaryService.getDiariesByDate(date)
-            if (response.code == "200" && response.data != null) {
-                response.data.diaryList
-            } else {
-                null
+
+fun getDateByMonth(year: Int, month: Int, context: Context){
+    RetrofitClient.create(context).getDiriesByMonth(year, month).enqueue(object :Callback<DiaryResponseByMonth>{
+        override fun onResponse(
+            call: Call<DiaryResponseByMonth>,
+            response: Response<DiaryResponseByMonth>
+        ) {
+            if(response.isSuccessful){
+                datelist.clear()
+
+                for (i in response.body()!!.data?.diaryList?.indices!!){
+                    datelist.add(response.body()!!.data?.diaryList?.get(i).toString())
+                    Log.d("SUCCESS", datelist[i].toString())
+                }
             }
-        } catch (e: Exception) {
-            // 네트워크 오류 또는 예외 처리
-            e.printStackTrace()
-            null
+            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
+                Log.e("404 error", response.code().toString())
+                Log.e("404 error", response.errorBody().toString())
+                Log.d("message", call.request().toString())
+                Log.d("msss", response.message().toString())
+            }
         }
-    }
+
+        override fun onFailure(call: Call<DiaryResponseByMonth>, t: Throwable) {
+            TODO("Not yet implemented")
+        }
+
+    })
+}
+
+@Composable
+fun getDateByMonthComposable(year: Int, month: Int, context: Context){
+    RetrofitClient.create(context).getDiriesByMonth(year, month).enqueue(object :Callback<DiaryResponseByMonth>{
+        override fun onResponse(
+            call: Call<DiaryResponseByMonth>,
+            response: Response<DiaryResponseByMonth>
+        ) {
+            if(response.isSuccessful){
+                datelist.clear()
+
+                val responseBody = response.body()
+                responseBody?.data?.diaryList?.let { newList ->
+
+                    Log.d("SUCCESS", "Setting: newList = $newList")
+
+                    datelist.addAll(newList)
+                }
+            }
+            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
+                Log.e("404 error", response.code().toString())
+                Log.e("404 error", response.errorBody().toString())
+            }
+        }
+
+        override fun onFailure(call: Call<DiaryResponseByMonth>, t: Throwable) {
+            TODO("Not yet implemented")
+        }
+
+    })
+}
+
+
+fun getDiaryByDate(date : String, context: Context){
+    RetrofitClient.create(context).getDiariesByDate(date).enqueue(object :Callback<DiaryResponse>{
+        override fun onResponse(
+            call: Call<DiaryResponse>,
+            response: Response<DiaryResponse>
+        ) {
+            if(response.isSuccessful){
+                diarydataList.clear()
+
+                val responseBody = response.body()
+                responseBody?.data?.diaryList?.let { newList ->
+
+                    Log.d("SUCCESS", "Setting: newList = $newList")
+
+                    diarydataList.addAll(newList)
+                }
+            }
+            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
+                Log.e("404 error", response.code().toString())
+                Log.e("404 error", response.errorBody().toString())
+            }
+        }
+
+        override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
+            TODO("Not yet implemented")
+        }
+
+    })
+}
+@Composable
+fun getDiaryByDateComposable(date : String, context: Context){
+    RetrofitClient.create(context).getDiariesByDate(date).enqueue(object :Callback<DiaryResponse>{
+        override fun onResponse(
+            call: Call<DiaryResponse>,
+            response: Response<DiaryResponse>
+        ) {
+            if(response.isSuccessful){
+                diarydataList.clear()
+
+                val responseBody = response.body()
+                responseBody?.data?.diaryList?.let { newList ->
+
+                    Log.d("TAG", "Setting: newList = $newList")
+
+                    diarydataList.addAll(newList)
+                }
+            }
+            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
+                Log.e("404 error", response.code().toString())
+                Log.e("404 error", response.errorBody().toString())
+            }
+        }
+
+        override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
+            TODO("Not yet implemented")
+        }
+
+    })
+}
+
+fun getCurrentYearAndMonth(): Pair<Int, Int> {
+    val currentDate = LocalDate.now()
+    val year = currentDate.year
+    val month = currentDate.monthValue
+    return Pair(year, month)
 }
 
 @Preview

@@ -1,16 +1,18 @@
 package com.example.thanksd.MainPage.dataclass
 
+import com.google.gson.annotations.SerializedName
+
 data class DiaryResponse(
-    val code: String,
-    val message: String,
-    val data: DiaryData? // data가 null일 수 있으므로 Nullable로 선언합니다.
+    @SerializedName("code") val code: String,
+    @SerializedName("message") val message: String,
+    @SerializedName("data") val data: DiaryData? // data가 null일 수 있으므로 Nullable로 선언합니다.
 )
 
 data class DiaryData(
-    val diaryList: List<DiaryItem>?
+    @SerializedName("diaryList") val diaryList: List<DiaryItem>?
 )
 
 data class DiaryItem(
-    val id: Int,
-    val image: String
+    @SerializedName("id") val id: Int,
+    @SerializedName("image") val image: String
 )
