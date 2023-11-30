@@ -92,7 +92,6 @@ object QuotesData {
         Quote("Learning is not compulsory… neither is survival.", "W. Edwards Deming"),
         Quote("Seeing much, suffering much, and studying much, are the three pillars of learning. ", "Benjamin Disraeli"),
         Quote("Learning is not attained by chance, it must be sought for with ardor and attended to with diligence. ", "Abigail Adams"),
-        Quote("Men acquire a particular quality by constantly acting a particular way… you become just by performing just actions, temperate by performing temperate actions, brave by performing brave actions. ", "Aristotle"),
         Quote("What we have to do is to be forever curiously testing new opinions and courting new impressions.", "Walter Pater"),
         Quote("That is what learning is. You suddenly understand something you’ve understood all your life, but in a new way.", "Doris Lessing"),
         Quote("Isn’t it a pleasure to study, and to practice what you have learned?", "Confucius"),

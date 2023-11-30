@@ -220,6 +220,15 @@ fun saveLoginState(context: Context, isLoggedIn: Boolean) {
     val datelist = date.split("-")
     val date2= LocalDate.of(datelist[0].toInt(),datelist[1].toInt(),datelist[2].toInt())
     Log.d("date",date2.toString())
+    // token 앱 내 저장
+    val sharedPref = context.getSharedPreferences("TokenData", Context.MODE_PRIVATE)
+    with(sharedPref.edit()) {
+
+        putString("accessToken", ClientInformation.token)
+
+        apply() // 비동기적으로 데이터를 저장
+    }
+
 }
 
 fun getLoginState(context: Context): Boolean {
