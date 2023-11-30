@@ -1,6 +1,5 @@
 package com.example.thanksd.httpconnection
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.thanksd.login.dataclass.ClientInformation
