@@ -188,7 +188,7 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
     /* 유튜브 url 연결 */
-    implementation 'com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7'
+    implementation "com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7"
 
     /* Retrofit for HTTP Request */
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
