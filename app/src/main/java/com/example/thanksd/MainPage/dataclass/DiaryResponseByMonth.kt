@@ -12,6 +12,3 @@ data class DiaryDataByMonth(
     @SerializedName("dateList") val diaryList: List<String>?
 )
 
-//data class DiaryItemByMonth(
-//    val dataByMonth: String
-//)
