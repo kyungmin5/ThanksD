@@ -25,15 +25,21 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -41,13 +47,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +67,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
@@ -68,10 +78,14 @@ import com.example.thanksd.asmr.dataclass.mediaItem
 import com.example.thanksd.asmr.dataclass.mediaViewModel
 import com.example.thanksd.asmr.dataclass.youtubeData
 import com.example.thanksd.asmr.music.YoutubeURL
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlin.time.Duration.Companion.seconds
 
 class Healing {
     lateinit var list: MutableStateFlow<ArrayList<mediaItem>>
+    var streamurl = MutableStateFlow<String>("")
+    lateinit var exoPlayer:ExoPlayer
     lateinit var mediaViewModels: ArrayList<mediaViewModel>
     val videoIDs = listOf(
         "n1WLUReOFcQ",
@@ -105,7 +119,6 @@ class Healing {
                 list.value = ArrayList(list.value).apply { add(item) }
                 youtubeData.youtueItems.add(item)
                 if(youtubeData.youtueItems.size == contentNum) {
-                    Log.d("check12",youtubeData.youtueItems.size.toString())
                     youtubeData.isReady = true
                 }
 //                Log.d("YoutubeURL",item.title)
@@ -129,11 +142,11 @@ class Healing {
             setPlaylist(context, lifeCycleOwner)
             isSetted.value=true
         }
-        BoxWithConstraints(
+        Box(
             modifier = Modifier
                 .background(Color.White)
                 .fillMaxSize()
-                .padding(15.dp, 30.dp, 15.dp, 10.dp),
+                .padding(15.dp, 30.dp, 15.dp, 55.dp),
             contentAlignment = Alignment.TopStart
         ) {
             Column(
@@ -185,7 +198,9 @@ class Healing {
                     //TODO quote 띄울 컴포저블 함수 구현
                     quotes()
                 }
-                Column {
+                Column(
+                    modifier = Modifier.padding(bottom = 55.dp)
+                ) {
                     Text(
                         text = "Sounds",
                         textAlign = TextAlign.Start,
@@ -195,10 +210,16 @@ class Healing {
                             .fillMaxWidth()
                             .fillMaxHeight()
                     ){
-                        //TODO Asmr 구현
                         asmr()
                     }
                 }
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .requiredWidth(LocalConfiguration.current.screenWidthDp.dp + 30.dp)
+            ){
+                player()
             }
         }
     }
@@ -221,12 +242,9 @@ class Healing {
     @Composable
     fun playlistView(){
         val arr by list.collectAsState()
-//        for(item in arr){
-//            Log.d("YoutubeURL",item.title)
+//        var streamurl = remember {
+//            mutableStateOf("")
 //        }
-        var streamurl = remember {
-            mutableStateOf("")
-        }
         val chunckedarr = arr.chunked(2)
 //        val scrollstate = rememberScrollState()
         Column(
@@ -241,7 +259,7 @@ class Healing {
                         Box(
                             modifier = Modifier
                                 .width(180.dp)
-                                .height(180.dp)
+                                .height(170.dp)
                                 .clickable {
                                     streamurl.value = item.url
                                 }
@@ -255,41 +273,45 @@ class Healing {
                                     contentDescription = null,
                                     modifier = Modifier
                                         .width(180.dp)
-                                        .height(160.dp)
+                                        .height(130.dp)
                                 )
-                                Text(text = item.title)
+                                Text(text = item.title,
+                                    modifier = Modifier
+                                        .width(175.dp)
+                                        .height(36.dp)
+                                )
                             }
                         }
                     }
                 }
 
             }
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ){
-                player(streamurl)
-            }
-
-
         }
-
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
+    @SuppressLint("UnsafeOptInUsageError", "StateFlowValueCalledInComposition")
     @Composable
-    fun player(url:MutableState<String>){
-        val item by url
+    fun player(){
+//        val item by url
+        val item = streamurl.collectAsState()
         val context = LocalContext.current
-        var exoPlayer = remember(item) {
+        exoPlayer = remember(context) {
             ExoPlayer.Builder(context)
                 .build()
                 .apply {
                     //Log.d("YoutubeURL",item)
-                    setMediaItem(MediaItem.fromUri(item))
+                    setMediaItem(MediaItem.fromUri(item.value))
                     prepare()
                     play()
                 }
-
+        }
+        LaunchedEffect(item.value){
+            exoPlayer.apply {
+                //Log.d("YoutubeURL",item)
+                setMediaItem(MediaItem.fromUri(item.value))
+                prepare()
+                play()
+            }
         }
         var isPlaying by remember {
             mutableStateOf(false)
@@ -306,7 +328,7 @@ class Healing {
             Box (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(60.dp)
             ){
                 AndroidView(
                     factory = {
@@ -333,7 +355,7 @@ class Healing {
             }
         ) {
             onDispose {
-                Log.d("YoutubeURL","check")
+                Log.d("YoutubeURL","onDispose")
                 exoPlayer?.let {
                     it.release()
                 }
@@ -349,6 +371,24 @@ class Healing {
         onPlay: () -> Unit,
         onPause: () -> Unit
     ){
+        val duration = exoPlayer.duration.coerceAtLeast(0)
+        var currentPosition = exoPlayer.currentPosition.coerceIn(0, duration)
+
+        var sliderPosition by remember { mutableFloatStateOf(currentPosition.toFloat()) }
+
+        // ExoPlayer의 현재 위치를 업데이트
+        if(isPlaying) {
+            LaunchedEffect(Unit) {
+                Log.d("check12", "slider")
+                while(true) {
+                    currentPosition = exoPlayer.currentPosition
+                    sliderPosition = currentPosition.toFloat()
+                    delay(1.seconds / 30)
+                }
+
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -361,7 +401,7 @@ class Healing {
                 }
         ) {
             AnimatedVisibility(
-                visible = !isPlaying,
+                visible = true,
                 enter = fadeIn(tween(200)),
                 exit = fadeOut(tween(200))
             ) {
@@ -369,16 +409,43 @@ class Healing {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            Color.Black
+                            Color.Gray
                                 .copy(alpha = 0.6f)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Pause,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(0.dp, 8.dp)
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                    ){
+                        Icon(
+                            imageVector = if(isPlaying)Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Slider(
+                            value = sliderPosition,
+                            onValueChange = { newPosition ->
+                                sliderPosition = newPosition
+                                exoPlayer.seekTo(newPosition.toLong())
+                            },
+                            onValueChangeFinished = {
+                                exoPlayer.seekTo(sliderPosition.toLong())
+                            },
+                            valueRange = 0f..duration.toFloat(),
+                            colors = SliderDefaults.colors(
+                                thumbColor = Color.White,
+                                activeTrackColor = Color.White,
+                                inactiveTrackColor = Color.Gray
+                            ),
+                            modifier = Modifier.width(400.dp)
+
+                        )
+
+                    }
                 }
             }
 
