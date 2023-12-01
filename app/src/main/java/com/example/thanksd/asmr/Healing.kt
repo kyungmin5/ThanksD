@@ -73,10 +73,6 @@ import com.example.thanksd.asmr.dataclass.mediaViewModel
 import com.example.thanksd.asmr.music.YoutubeURL
 import com.example.thanksd.userprofile.ChangeNameActivity
 import kotlinx.coroutines.flow.MutableStateFlow
-import com.example.thanksd.MainPage.QuotesData
-import com.example.thanksd.MainPage.dataclass.Quote
-import com.example.thanksd.MainPage.getRandomQuote
-import com.example.thanksd.userprofile.ChangeNameActivity
 
 class Healing {
     lateinit var list: MutableStateFlow<ArrayList<mediaItem>>
