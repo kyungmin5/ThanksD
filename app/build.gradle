@@ -1,24 +1,29 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.21'
+    id 'com.google.devtools.ksp'
 }
-
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'com.example.thanksd'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.thanksd"
         minSdk 30
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         buildConfigField "String","API_KEY",properties["Native_App_Key"]
         resValue "string","oauth_host",properties["kakao_oauth_host"]
+
+        buildConfigField "String","Redirecturl",properties["redirecturl"]
+        buildConfigField "String","Client_id",properties["client_id"]
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -42,7 +47,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.2"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packagingOptions {
         resources {
@@ -53,29 +58,113 @@ android {
         compose true
         buildConfig true
     }
+
+
+
+    applicationVariants.all { variant ->
+        variant.sourceSets.java.each {
+            it.srcDirs += "build/generated/ksp/${variant.name}/kotlin"
+        }
+    }
+
+
 }
 
 dependencies {
 
-    implementation "androidx.compose.material:material-icons-extended:1.4.2"
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation 'com.google.mlkit:vision-common:17.3.0'
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    def camerax_version = "1.3.0-alpha04"
 
+    implementation 'com.github.SmartToolFactory:Compose-Screenshot:1.0.3'
+
+
+    //// CAMERA  ////
+    // CameraX core library using the camera2 implementation
+    // The following line is optional, as the core library is included indirectly by camera-camera2
+    implementation("androidx.camera:camera-core:${camerax_version}")
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
+    // If you want to additionally use the CameraX Lifecycle library
+    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
+    // If you want to additionally use the CameraX VideoCapture library
+    implementation("androidx.camera:camera-video:${camerax_version}")
+    // If you want to additionally use the CameraX View class
+    implementation("androidx.camera:camera-view:${camerax_version}")
+    // If you want to additionally add CameraX ML Kit Vision Integration
+    implementation("androidx.camera:camera-mlkit-vision:1.2.0-beta02")
+    // If you want to additionally use the CameraX Extensions library
+    implementation("androidx.camera:camera-extensions:${camerax_version}")
+
+    //// ACCOMPANIST ////
+    implementation "com.google.accompanist:accompanist-permissions:0.32.0"
+
+    ////DEPENDENCY INJECTION////
+    ////KOIN BASE////
+    implementation "io.insert-koin:koin-core:3.5.2-RC1"
+    implementation "io.insert-koin:koin-android:3.5.0"
+    implementation 'io.insert-koin:koin-androidx-compose:3.5.0'
+
+    ////KOIN KSP////
+    implementation "io.insert-koin:koin-annotations:1.3.0"
+    ksp "io.insert-koin:koin-ksp-compiler:1.3.0"
+
+    ///// LIFECYCLE /////
+    def lifecycle_version = "2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+
+    ///// IMAGE PICKER RELATED /////
+    implementation "io.coil-kt:coil-compose:2.1.0"
+
+    implementation "androidx.compose.material:material-icons-extended:1.4.2"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.5.1'
+    implementation 'androidx.activity:activity-compose:1.8.0'
     implementation platform('androidx.compose:compose-bom:2022.10.00')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material'
     implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.9'
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+
+
+
+    implementation("androidx.compose.material3:material3:1.0.1")
+    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
@@ -89,4 +178,21 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:22.0.0'
     implementation 'com.google.firebase:firebase-bom:32.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
+
+    /*로그인 상태 유지*/
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
+
+    /* exoplayer */
+    def media3_version = "1.0.0-rc01"
+    implementation "androidx.media3:media3-exoplayer:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
+    implementation "androidx.media3:media3-ui:$media3_version"
+
+    /* Retrofit for HTTP Request */
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    /* Logging Interceptor for HTTP Request */
+    implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
+
 }
