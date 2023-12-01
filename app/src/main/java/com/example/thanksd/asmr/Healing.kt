@@ -27,11 +27,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material3.Icon
@@ -66,11 +65,18 @@ import androidx.media3.ui.PlayerView
 import coil.compose.rememberAsyncImagePainter
 import com.example.thanksd.MainPage.QuotesData
 import com.example.thanksd.MainPage.dataclass.Quote
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import com.example.thanksd.R
 import com.example.thanksd.asmr.dataclass.mediaItem
 import com.example.thanksd.asmr.dataclass.mediaViewModel
 import com.example.thanksd.asmr.music.YoutubeURL
 import com.example.thanksd.userprofile.ChangeNameActivity
 import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.thanksd.MainPage.QuotesData
+import com.example.thanksd.MainPage.dataclass.Quote
+import com.example.thanksd.MainPage.getRandomQuote
+import com.example.thanksd.userprofile.ChangeNameActivity
 
 class Healing {
     lateinit var list: MutableStateFlow<ArrayList<mediaItem>>
@@ -185,6 +191,8 @@ class Healing {
                         asmr()
                     }
                 }
+
+
             }
         }
     }

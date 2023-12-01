@@ -1,6 +1,10 @@
 package com.example.thanksd.retrofit
 
 import android.util.Log
+import com.example.thanksd.MainPage.dataclass.DiaryResponse
+import com.example.thanksd.MainPage.dataclass.DiaryResponsePresignedUrl
+import com.example.thanksd.MainPage.diarydataList
+import com.example.thanksd.Retrofit.RetrofitClient
 import com.example.thanksd.utils.API
 import com.example.thanksd.utils.Constants.TAG
 import com.example.thanksd.utils.RESPONSE_STATE
@@ -9,6 +13,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class RetrofitManager {
@@ -104,7 +109,7 @@ class RetrofitManager {
         })
     }
 
-    // Pre-Signed Url 받아 오기
+     //Pre-Signed Url 받아 오기
     fun getPresignedUrl(image: String?, completion: (RESPONSE_STATE, String) -> Unit){
         val imageName = image ?: ""
         val call = iRetrofit?.getPresignedUrl(imageName = imageName) ?: return
@@ -122,6 +127,37 @@ class RetrofitManager {
             }
         })
     }
+
+//    fun getPresignedUrl(url: String){
+//        RetrofitClient.create(context).getPresignedUrl(url).enqueue(object :
+//            Callback<DiaryResponsePresignedUrl> {
+//            override fun onResponse(
+//                call: Call<DiaryResponse>,
+//                response: Response<DiaryResponse>
+//            ) {
+//                if(response.isSuccessful){
+//                    diarydataList.clear()
+//
+//                    val responseBody = response.body()
+//                    responseBody?.data?.diaryList?.let { newList ->
+//
+//                        Log.d("SUCCESS", "Setting: newList = $newList")
+//
+//                        diarydataList.addAll(newList)
+//                    }
+//                }
+//                else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
+//                    Log.e("404 error", response.code().toString())
+//                    Log.e("404 error", response.errorBody().toString())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
+//    }
 
     // 이미지
     fun uploadImagetoS3(preSignedUrl: String?, file: RequestBody, completion: (RESPONSE_STATE, String) -> Unit){
