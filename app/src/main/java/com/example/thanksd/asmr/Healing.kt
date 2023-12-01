@@ -66,6 +66,7 @@ import coil.compose.rememberImagePainter
 import com.example.thanksd.R
 import com.example.thanksd.asmr.dataclass.mediaItem
 import com.example.thanksd.asmr.dataclass.mediaViewModel
+import com.example.thanksd.asmr.dataclass.youtubeData
 import com.example.thanksd.asmr.music.YoutubeURL
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -79,6 +80,9 @@ class Healing {
         "d41r5AAKoXA",
         "ss-QUzI90to"
     )
+    companion object {
+        val contentNum = 5
+    }
 
     private fun setPlaylist(context: Context, lifeCycleOwner:LifecycleOwner){
         //viewModelList = ArrayList<mediaViewModel>()
@@ -88,11 +92,22 @@ class Healing {
         for(items in videoIDs){
             mediaViewModels.add(mediaViewModel())
         }
+        if(youtubeData.isReady){
+            for(item in youtubeData.youtueItems) {
+                list.value = ArrayList(list.value).apply { add(item) }
+            }
+            return
+        }
         var i =0
         for(videoID in videoIDs){
             urlManager.generateURL(videoID, mediaViewModels[i])
             mediaViewModels[i].url.observe(lifeCycleOwner, Observer { item ->
                 list.value = ArrayList(list.value).apply { add(item) }
+                youtubeData.youtueItems.add(item)
+                if(youtubeData.youtueItems.size == contentNum) {
+                    Log.d("check12",youtubeData.youtueItems.size.toString())
+                    youtubeData.isReady = true
+                }
 //                Log.d("YoutubeURL",item.title)
             })
             i += 1
@@ -249,7 +264,12 @@ class Healing {
                 }
 
             }
-            player(streamurl)
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ){
+                player(streamurl)
+            }
+
 
         }
 
