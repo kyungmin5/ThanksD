@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material3.Icon
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +46,9 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import com.example.thanksd.MainPage.QuotesData
+import com.example.thanksd.MainPage.dataclass.Quote
+import com.example.thanksd.MainPage.getRandomQuote
 import com.example.thanksd.userprofile.ChangeNameActivity
 
 class Healing {
@@ -123,10 +128,41 @@ class Healing {
         }
     }
     @Composable
-    fun todayQuotes(){
+    fun todayQuotes() {
+        val quote = remember { getRandomQuote() } // QuotesData에서 무작위 명언 가져오기
 
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(Color(0xFFAC9C7C), shape = RoundedCornerShape(8.dp))
+                .padding(8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .align(Alignment.BottomStart)
+            ) {
+                Text(
+                    text = quote.content,
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = "- ${quote.author}",
+                    fontSize = 12.sp,
+                    color = Color(0xFF567050), // 짙은 초록색
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.End
+                )
+            }
+        }
     }
 
+    fun getRandomQuote(): Quote {
+        val randomIndex = (0 until QuotesData.quotesList.size).random()
+        return QuotesData.quotesList[randomIndex]
+    }
 
     @Composable
     fun quotes(){

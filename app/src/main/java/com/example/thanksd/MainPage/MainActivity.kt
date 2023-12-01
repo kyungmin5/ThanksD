@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            Calendar()
             getDateByMonth(year, month, LocalContext.current)
-            getDiaryByDate("2023-11-26", LocalContext.current)
+//            getDiaryByDate("2023-11-26", LocalContext.current)
 
             val navController = rememberNavController()
             Screen(navController)
@@ -99,9 +99,6 @@ class MainActivity : ComponentActivity() {
 fun Calendar() {
     var date by remember {
         mutableStateOf("")
-    }
-    var diaries by remember {
-        mutableStateOf<List<DiaryItem>?>(null)
     }
     val context = LocalContext.current
     Log.d("check123", ClientInformation.token)
@@ -140,10 +137,6 @@ fun Calendar() {
                 // 캘린더 뷰 위에 무작위 명언과 작가 이름을 포함한 상자 추가
                 RandomQuoteBox()
 
-                // 캘린더 뷰 업데이트하는 로직
-                val diaryService = DiaryService()
-
-
                 AndroidView(
                     factory = { context ->
                         CalendarView(context).apply {
@@ -156,10 +149,6 @@ fun Calendar() {
                             val formattedDate = String.format("%d-%02d-%02d", year, month + 1, day)
                             date = formattedDate
 
-                            /*viewModelScope.launch {
-                                diaries = fetchDiariesByDate(formattedDate)
-                                // 여기서 diaries를 사용하여 UI를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
-                            }*/
                         }
                     },
                     modifier = Modifier
@@ -167,18 +156,6 @@ fun Calendar() {
                         .border(3.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
                         .padding(bottom = 5.dp) // 캘린더뷰 아래 여백 추가
                 )
-                // 이미지 목록을 보여줄 화면으로 네비게이션
-                /*diaries?.let { diaryList ->
-                    if (diaryList.isNotEmpty()) {
-                        // 이미지 목록이 비어 있지 않을 때 화면 이동
-                        ShowDiaryImages(diaryList = diaryList) { imageUrl ->
-                            // Glide를 사용하여 이미지 띄우기
-                            Glide.with(context)
-                                .load(imageUrl)
-                                //.into(imageView)
-                        }
-                    }
-                }*/
 
                 // 우측 하단에 흰색 동그라미 아이콘 추가
                 FloatingActionButton(
@@ -346,7 +323,7 @@ fun RandomQuoteBox() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(Color(0xFFB8805d), shape = RoundedCornerShape(8.dp))
+            .background(Color(0xFFAC9C7C), shape = RoundedCornerShape(8.dp))
             .padding(8.dp)
     ) {
         Column(
@@ -362,7 +339,9 @@ fun RandomQuoteBox() {
             Text(
                 text = "- ${quote.author}",
                 fontSize = 12.sp,
-                color = Color(0xFF006400) // 짙은 초록색
+                color = Color(0xFF567050), // 짙은 초록색
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
             )
         }
     }
