@@ -55,8 +55,8 @@ import com.example.thanksd.MainPage.dataclass.DiaryResponse
 import com.example.thanksd.MainPage.dataclass.DiaryResponseByMonth
 import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.R
-import com.example.thanksd.asmr.Healing
 import com.example.thanksd.Retrofit.RetrofitClient
+import com.example.thanksd.asmr.Healing
 import com.example.thanksd.editor.EditorActivity
 import com.example.thanksd.httpconnection.DiaryService
 import com.example.thanksd.login.dataclass.ClientInformation
@@ -136,6 +136,9 @@ fun Calendar() {
 
                 // 캘린더 뷰 위에 무작위 명언과 작가 이름을 포함한 상자 추가
                 RandomQuoteBox()
+
+                // 캘린더 뷰 업데이트하는 로직
+                val diaryService = DiaryService()
 
                 AndroidView(
                     factory = { context ->
