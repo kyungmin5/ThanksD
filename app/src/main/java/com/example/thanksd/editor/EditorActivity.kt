@@ -53,6 +53,7 @@ import com.example.thanksd.ui.theme.ThanksDTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.smarttoolfactory.screenshot.rememberScreenshotState
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -143,13 +144,14 @@ private fun EditorScreen(
             .padding(top = 10.dp),
         verticalArrangement = Arrangement.Bottom
     ){
+        val screenshotState = rememberScreenshotState()
         Box(modifier = Modifier.fillMaxWidth()
             .background(color = Color.Black)
             .clip(shape = RoundedCornerShape(25.dp))
             .weight(5.0f)
         ) {
             if(selectedImageUri !== null){
-                CanvasView(resetCallback = { resetSelectedImages() }, background = {
+                CanvasView(screenshotState=screenshotState, resetCallback = { resetSelectedImages() }, background = {
                     AsyncImage(
                         model = selectedImageUri,
                         contentDescription = null,
@@ -158,7 +160,7 @@ private fun EditorScreen(
                     )
                 })
             }else if(lastCapturedPhoto !== null){
-                CanvasView(resetCallback = { resetSelectedImages() },
+                CanvasView(screenshotState=screenshotState, resetCallback = { resetSelectedImages() },
                     background = {
                         LastPhotoPreview(modifier = Modifier.fillMaxWidth(), lastCapturedPhoto=lastCapturedPhoto)
                     })
@@ -174,7 +176,7 @@ private fun EditorScreen(
             .weight(1.0f)){
             if(selectedImageUri !== null || lastCapturedPhoto !== null){
                 // editor
-                CanvasRowController()
+                CanvasRowController(imageBitmap=screenshotState?.imageBitmap)
             }else{
                 // camera
                 CameraRowController(viewModel = viewModel, controller = cameraController, singlePhotoPickerLauncher = singlePhotoPickerLauncher)
