@@ -103,6 +103,7 @@ class Healing {
 
     @Composable
     fun healing(){
+        val scrollstate = rememberScrollState()
         val context = LocalContext.current
         val lifeCycleOwner = LocalLifecycleOwner.current
         val isSetted = remember {
@@ -122,7 +123,8 @@ class Healing {
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(30.dp) // 간격 30dp
+                verticalArrangement = Arrangement.spacedBy(30.dp), // 간격 30dp
+                modifier = Modifier.verticalScroll(scrollstate)
             ){
                 //TODO 화면 구성 함수 호출
                 Text(
@@ -211,9 +213,9 @@ class Healing {
             mutableStateOf("")
         }
         val chunckedarr = arr.chunked(2)
-        val scrollstate = rememberScrollState()
+//        val scrollstate = rememberScrollState()
         Column(
-            Modifier.verticalScroll(scrollstate)
+//            Modifier.verticalScroll(scrollstate)
         ) {
             chunckedarr.forEach { pair ->
                 Row(
