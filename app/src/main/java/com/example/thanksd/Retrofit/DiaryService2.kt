@@ -23,6 +23,6 @@ interface DiaryService2 {
     @GET("/diaries/presigned")
     fun getPresignedUrl(@Query("image") imageName: String) : Call<DiaryResponsePresignedUrl>
 
-    @POST("/diaries")
-    fun postDiary(@Body requestBody: DiaryRequestBody) : Call<DiaryPostImg>
+//    @POST("/diaries")
+//    fun postDiary(@Body() requestBody: DiaryRequestBody) : Call<DiaryPostImg>
 }
