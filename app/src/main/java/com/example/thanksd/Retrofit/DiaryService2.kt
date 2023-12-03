@@ -1,8 +1,8 @@
-package com.example.thanksd.retrofit
+package com.example.thanksd.Retrofit
 
-import com.example.thanksd.mainpage.dataclass.DiaryResponse
-import com.example.thanksd.mainpage.dataclass.DiaryResponseByMonth
-import com.example.thanksd.mainpage.dataclass.DiaryResponsePresignedUrl
+import com.example.thanksd.MainPage.dataclass.DiaryResponse
+import com.example.thanksd.MainPage.dataclass.DiaryResponseByMonth
+import com.example.thanksd.MainPage.dataclass.DiaryResponsePresignedUrl
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

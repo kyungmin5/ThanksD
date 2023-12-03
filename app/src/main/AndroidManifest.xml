@@ -41,12 +41,12 @@
             android:label="@string/title_activity_editor"
             android:theme="@style/Theme.ThanksD" />
         <activity
-            android:name=".mainpage.MainActivity"
+            android:name=".MainPage.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.ThanksD" />
         <activity
-            android:name=".mainpage.DiaryEntryActivity"
+            android:name=".MainPage.DiaryEntryActivity"
             android:exported="true"
             android:label="@string/title_activity_diaryentry"
             android:theme="@style/Theme.ThanksD" />

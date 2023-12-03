@@ -26,7 +26,7 @@ import androidx.lifecycle.Observer
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.thanksd.BuildConfig
-import com.example.thanksd.mainpage.MainActivity
+import com.example.thanksd.MainPage.MainActivity
 import com.example.thanksd.httpconnection.HttpFunc
 import com.example.thanksd.httpconnection.JsonViewModel
 import com.example.thanksd.login.LoginActivity

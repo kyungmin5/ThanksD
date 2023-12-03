@@ -1,4 +1,4 @@
-package com.example.thanksd.retrofit
+package com.example.thanksd.Retrofit
 
 import android.util.Log
 import com.example.thanksd.dashboard.data.DashBoardByDateResponse

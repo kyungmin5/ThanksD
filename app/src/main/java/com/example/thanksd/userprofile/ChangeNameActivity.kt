@@ -38,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thanksd.mainpage.MainActivity
+import com.example.thanksd.MainPage.MainActivity
 import com.example.thanksd.R
 import com.example.thanksd.userprofile.ui.theme.ThanksDTheme
 
@@ -106,7 +106,7 @@ fun changeName() {
                         )},
                         onValueChange = {newValue -> text = newValue},
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = Color.Black, // 텍스트 색상 변경
+                            focusedTextColor = Color.Black, // 텍스트 색상 변경 Todo
                             focusedBorderColor = Color.Gray, // 포커스된 상태의 테두리 색상
                             unfocusedBorderColor = Color.Gray // 포커스되지 않은 상태의 테두리 색상
                         )

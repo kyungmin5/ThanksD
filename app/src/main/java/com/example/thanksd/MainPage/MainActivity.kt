@@ -1,4 +1,4 @@
-package com.example.thanksd.mainpage
+package com.example.thanksd.MainPage
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -36,20 +36,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.thanksd.mainpage.component.MainCalendar
-import com.example.thanksd.mainpage.dataclass.BottomNavItem
-import com.example.thanksd.mainpage.dataclass.DiaryItem
-import com.example.thanksd.mainpage.dataclass.DiaryResponse
-import com.example.thanksd.mainpage.dataclass.DiaryResponseByMonth
-import com.example.thanksd.mainpage.dataclass.Quote
+import com.example.thanksd.MainPage.component.MainCalendar
+import com.example.thanksd.MainPage.dataclass.BottomNavItem
+import com.example.thanksd.MainPage.dataclass.DiaryItem
+import com.example.thanksd.MainPage.dataclass.DiaryResponse
+import com.example.thanksd.MainPage.dataclass.DiaryResponseByMonth
+import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.R
-import com.example.thanksd.retrofit.RetrofitClient
+import com.example.thanksd.Retrofit.RetrofitClient
 import com.example.thanksd.asmr.Healing
 import com.example.thanksd.dashboard.DashBoard
 import com.example.thanksd.dashboard.ui.theme.PrimaryYellow
 import com.example.thanksd.editor.EditorActivity
 import com.example.thanksd.login.dataclass.ClientInformation
-import com.example.thanksd.mainpage.QuotesData
 import com.example.thanksd.userprofile.UserProfile
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,15 +58,14 @@ import java.time.LocalDate
 val userProfile = UserProfile() // userprofile composable fun 저장한 클래스
 val healing = Healing()
 var datelist = ArrayList<String>()
-var diarydataList = ArrayList<DiaryItem>()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val (year, month) = getCurrentYearAndMonth()
         setContent {
 //            Calendar()
-            getDateByMonth(year, month, LocalContext.current)
-            getDiaryByDate("2023-11-26", LocalContext.current)
+//            getDateByMonth(year, month, LocalContext.current)
+//            getDiaryByDate("2023-11-26", LocalContext.current)
 
             val navController = rememberNavController()
             Screen(navController)
@@ -282,7 +280,7 @@ fun RandomQuoteBox() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(Color(0xFFB8805d), shape = RoundedCornerShape(8.dp))
+            .background(Color(0xFFAC9C7C), shape = RoundedCornerShape(8.dp))
             .padding(8.dp)
     ) {
         Column(
@@ -303,7 +301,7 @@ fun RandomQuoteBox() {
                 textAlign = TextAlign.End,
                 text = "- ${quote.author}",
                 fontSize = 12.sp,
-                color = Color(0xFF006400),
+                color = Color(0xFF567050),
                 fontWeight = FontWeight.Bold
             )
         }
@@ -379,65 +377,35 @@ fun getDateByMonthComposable(year: Int, month: Int, context: Context){
 }
 
 
-fun getDiaryByDate(date : String, context: Context){
-    RetrofitClient.create(context).getDiariesByDate(date).enqueue(object :Callback<DiaryResponse>{
-        override fun onResponse(
-            call: Call<DiaryResponse>,
-            response: Response<DiaryResponse>
-        ) {
-            if(response.isSuccessful){
-                diarydataList.clear()
-
-                val responseBody = response.body()
-                responseBody?.data?.diaryList?.let { newList ->
-
-                    Log.d("SUCCESS", "Setting: newList = $newList")
-
-                    diarydataList.addAll(newList)
-                }
-            }
-            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
-                Log.e("404 error", response.code().toString())
-                Log.e("404 error", response.errorBody().toString())
-            }
-        }
-
-        override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
-            TODO("Not yet implemented")
-        }
-
-    })
-}
-@Composable
-fun getDiaryByDateComposable(date : String, context: Context){
-    RetrofitClient.create(context).getDiariesByDate(date).enqueue(object :Callback<DiaryResponse>{
-        override fun onResponse(
-            call: Call<DiaryResponse>,
-            response: Response<DiaryResponse>
-        ) {
-            if(response.isSuccessful){
-                diarydataList.clear()
-
-                val responseBody = response.body()
-                responseBody?.data?.diaryList?.let { newList ->
-
-                    Log.d("TAG", "Setting: newList = $newList")
-
-                    diarydataList.addAll(newList)
-                }
-            }
-            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
-                Log.e("404 error", response.code().toString())
-                Log.e("404 error", response.errorBody().toString())
-            }
-        }
-
-        override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
-            TODO("Not yet implemented")
-        }
-
-    })
-}
+//fun getDiaryByDate(date : String, context: Context){
+//    RetrofitClient.create(context).getDiariesByDate(date).enqueue(object :Callback<DiaryResponse>{
+//        override fun onResponse(
+//            call: Call<DiaryResponse>,
+//            response: Response<DiaryResponse>
+//        ) {
+//            if(response.isSuccessful){
+//                diarydataList.clear()
+//
+//                val responseBody = response.body()
+//                responseBody?.data?.diaryList?.let { newList ->
+//
+//                    Log.d("SUCCESS", "Setting: newList = $newList")
+//
+//                    diarydataList.addAll(newList)
+//                }
+//            }
+//            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
+//                Log.e("404 error", response.code().toString())
+//                Log.e("404 error", response.errorBody().toString())
+//            }
+//        }
+//
+//        override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
+//            TODO("Not yet implemented")
+//        }
+//
+//    })
+//}
 
 fun getCurrentYearAndMonth(): Pair<Int, Int> {
     val currentDate = LocalDate.now()

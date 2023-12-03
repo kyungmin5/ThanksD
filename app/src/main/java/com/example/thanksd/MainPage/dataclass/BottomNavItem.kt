@@ -1,4 +1,4 @@
-package com.example.thanksd.mainpage.dataclass
+package com.example.thanksd.MainPage.dataclass
 
 data class BottomNavItem (
     val name: String,

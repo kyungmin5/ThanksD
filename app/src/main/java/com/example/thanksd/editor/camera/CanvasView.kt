@@ -61,8 +61,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thanksd.retrofit.DiaryPostReqBody
-import com.example.thanksd.retrofit.RetrofitManager
+import com.example.thanksd.Retrofit.DiaryPostReqBody
+import com.example.thanksd.Retrofit.RetrofitManager
 import com.example.thanksd.dashboard.ui.theme.DarkBrown
 import com.example.thanksd.dashboard.ui.theme.PrimaryYellow
 import com.example.thanksd.editor.camera.data.TextElementState

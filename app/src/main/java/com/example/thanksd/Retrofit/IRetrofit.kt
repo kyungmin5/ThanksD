@@ -1,4 +1,4 @@
-package com.example.thanksd.retrofit
+package com.example.thanksd.Retrofit
 
 import com.example.thanksd.dashboard.data.DashBoardByDateResponse
 import com.example.thanksd.dashboard.data.DashBoardByMonthResponse

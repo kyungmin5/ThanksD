@@ -67,8 +67,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import coil.compose.rememberAsyncImagePainter
-import com.example.thanksd.mainpage.QuotesData
-import com.example.thanksd.mainpage.dataclass.Quote
+import com.example.thanksd.MainPage.QuotesData
+import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.asmr.dataclass.mediaItem
 import com.example.thanksd.asmr.dataclass.mediaViewModel
 import com.example.thanksd.asmr.dataclass.youtubeData

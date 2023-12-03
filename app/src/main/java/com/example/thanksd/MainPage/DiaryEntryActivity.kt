@@ -1,14 +1,21 @@
-package com.example.thanksd.mainpage
+package com.example.thanksd.MainPage
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,40 +23,69 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.example.thanksd.MainPage.dataclass.DiaryItem
+import com.example.thanksd.MainPage.dataclass.DiaryResponse
 import com.example.thanksd.R
+import com.example.thanksd.Retrofit.RetrofitClient
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.skydoves.landscapist.ImageOptions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
+private var diarydataList = ArrayList<DiaryItem>()
 class DiaryEntryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             // Intent에서 date 값을 가져옴
             val receivedIntent = intent
             val date = receivedIntent.getStringExtra("DATE_KEY")
-            val listOfImage = listOf(R.drawable.body, R.drawable.girl, R.drawable.girl_2)
-            Stories(listOfImage, date)
+            val context = LocalContext.current
+
+            if (date != null) {
+                getDiaryByDate(date, context)
+                Log.d("너지?", diarydataList.toString())
+                var imageList = ArrayList<String>()
+                for (i in diarydataList.indices){
+                    imageList.add("https://thanksd-image-bucket.s3.ap-northeast-2.amazonaws.com/${diarydataList[i].image}")
+                    Log.d("얜가?", diarydataList[i].toString())
+                }
+                Stories(imageList, date)
+            }
+            Log.d("date 확인", date.toString())
+            Log.d("한번 더 체크", diarydataList.toString())
         }
     }
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Stories(listOfImage: List<Int>, date: String?){
+fun Stories(listOfImage: List<String>, date: String?){
     val pagerState = rememberPagerState(pageCount = listOfImage.size)
+    Log.d("사이즈 확인", listOfImage.size.toString())
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-//    Log.d("dateCheck", date.toString())
+    Log.d("dateCheck", date.toString())
 
     var currentPage by remember{
         mutableStateOf(0)
@@ -96,6 +132,7 @@ fun Stories(listOfImage: List<Int>, date: String?){
         IconButton(
             onClick = {
                 // 클릭 이벤트 처리
+//                diarydataList.clear()
                 val intent = Intent(context, MainActivity::class.java)
                 context.startActivity(intent)
             },
@@ -134,12 +171,24 @@ fun Stories(listOfImage: List<Int>, date: String?){
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun StoryImage(pagerState: PagerState, listOfImage: List<Int>) {
+fun StoryImage(pagerState: PagerState, listOfImage: List<String>) {
     HorizontalPager(state = pagerState, dragEnabled = false) {
-        Image(painter = painterResource(id = listOfImage[it]), contentDescription = null,
-            contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+        Image(
+            painter = // Optional: Add crossfade animation
+            rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(data = listOfImage[it]).apply(block = fun ImageRequest.Builder.() {
+                    crossfade(true) // Optional: Add crossfade animation
+                }).build()
+            ),
+            contentDescription = null, // Add proper content description
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            contentScale = ContentScale.Crop
+        )
     }
 }
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -172,4 +221,34 @@ fun LinearIndicator(modifier: Modifier, startProgress: Boolean = false, onAnimat
             .clip(RoundedCornerShape(12.dp)),
         progress = animatedProgess
     )
+}
+
+fun getDiaryByDate(date : String, context: Context){
+    RetrofitClient.create(context).getDiariesByDate(date).enqueue(object : Callback<DiaryResponse> {
+        override fun onResponse(
+            call: Call<DiaryResponse>,
+            response: Response<DiaryResponse>
+        ) {
+            if(response.isSuccessful){
+                diarydataList.clear()
+
+                val responseBody = response.body()
+                responseBody?.data?.diaryList?.let { newList ->
+
+
+                    diarydataList.addAll(newList)
+                    Log.d("SUCCESS", "Setting: newList = $diarydataList")
+                }
+            }
+            else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
+                Log.e("404 error", response.code().toString())
+                Log.e("404 error", response.errorBody().toString())
+            }
+        }
+
+        override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
+            TODO("Not yet implemented")
+        }
+
+    })
 }

@@ -211,4 +211,8 @@ dependencies {
 
     // The compose calendar library
     implementation 'com.kizitonwose.calendar:compose:2.4.0'
+
+    // Glide
+    implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
+    implementation "com.github.skydoves:landscapist-glide:2.2.12"
 }

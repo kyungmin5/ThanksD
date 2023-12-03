@@ -22,9 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thanksd.mainpage.MainActivity
-import com.example.thanksd.mainpage.QuotesData
-import com.example.thanksd.mainpage.dataclass.Quote
+import com.example.thanksd.MainPage.MainActivity
+import com.example.thanksd.MainPage.QuotesData
+import com.example.thanksd.MainPage.dataclass.Quote
 
 class MoreQuotesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
