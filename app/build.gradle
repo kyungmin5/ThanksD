@@ -77,6 +77,10 @@ dependencies {
     implementation platform('androidx.compose:compose-bom:2023.03.00')
     implementation 'com.google.mlkit:vision-common:17.3.0'
     implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
     androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
     androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
     androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
@@ -187,8 +191,10 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
+
     /* 유튜브 url 연결 */
     implementation 'com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7'
+
 
     /* Retrofit for HTTP Request */
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -197,4 +203,6 @@ dependencies {
     /* Logging Interceptor for HTTP Request */
     implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
 
+    // The compose calendar library
+    implementation 'com.kizitonwose.calendar:compose:2.4.0'
 }

@@ -16,38 +16,34 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.filled.FlipCameraIos
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Camera
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FlipCameraIos
 import androidx.compose.material.icons.rounded.Image
-import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.thanksd.editor.camera.utils.rotateBitmap
 import java.nio.ByteBuffer
 import java.util.concurrent.Executor
@@ -60,22 +56,10 @@ fun CameraPreview(
     // 카메라 보여 주는 뷰
     val lifecycleOwner = LocalLifecycleOwner.current
     val activity = (LocalContext.current as? Activity)
-    Box(modifier = Modifier.fillMaxWidth()){
-        AndroidView(
-            modifier = modifier,
-            factory = {
-                PreviewView(it).apply {
-                    this.controller = controller
-                    controller.bindToLifecycle(lifecycleOwner)
-                }
-            }
-        )
-        Row(
-            modifier= Modifier
-                .align(Alignment.TopStart)
-                .offset(12.dp, 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+    Column{
+        Box(
+            modifier= Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
+                .fillMaxWidth()
         ){
             IconButton(
                 modifier = Modifier
@@ -84,10 +68,22 @@ fun CameraPreview(
                     activity?.finish()
                 },
             ){
-                Icon(modifier = Modifier.size(32.dp), imageVector = Icons.Rounded.Close, contentDescription = "Text Add icon", tint=Color.White)
+                Icon(modifier = Modifier.size(34.dp), imageVector = Icons.Rounded.Close, contentDescription = "Text Add icon", tint=Color.White)
             }
         }
+        Box(modifier = Modifier.fillMaxWidth().clip(shape = RoundedCornerShape(25.dp))){
+            AndroidView(
+                modifier = modifier,
+                factory = {
+                    PreviewView(it).apply {
+                        this.controller = controller
+                        controller.bindToLifecycle(lifecycleOwner)
+                    }
+                }
+            )
+        }
     }
+
 }
 
 
@@ -101,13 +97,13 @@ fun CameraRowController(
     val onPhotoCaptured = viewModel::updateCapturedPhotoState
     Row(
         modifier = Modifier
-            .fillMaxSize().padding(20.dp),
+            .fillMaxSize().padding(horizontal = 30.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconButton(
             modifier = Modifier
-                .size(42.dp) // Set the size of the IconButton
+                .size(38.dp) // Set the size of the IconButton
                 .background(Color.White, CircleShape),
             onClick = {
                 singlePhotoPickerLauncher.launch(
@@ -115,12 +111,12 @@ fun CameraRowController(
                 )
             },
             ){
-            Icon( modifier = Modifier.size(35.dp), imageVector = Icons.Rounded.Image, contentDescription = "Gallery icon", tint=Color.DarkGray)
+            Icon( modifier = Modifier.size(33.dp), imageVector = Icons.Rounded.Image, contentDescription = "Gallery icon", tint=Color.DarkGray)
         }
 
         IconButton(
             modifier = Modifier
-                .size(62.dp) // Set the size of the IconButton
+                .size(57.dp) // Set the size of the IconButton
                 .background(Color.White, CircleShape),
             onClick = {
                 capturePhoto(context, controller, onPhotoCaptured)
@@ -131,7 +127,7 @@ fun CameraRowController(
 
         IconButton(
             modifier = Modifier
-                .size(42.dp) // Set the size of the IconButton
+                .size(38.dp) // Set the size of the IconButton
                 .background(Color.White, CircleShape),
             onClick = {
                 controller.cameraSelector =
@@ -140,7 +136,7 @@ fun CameraRowController(
                     } else CameraSelector.DEFAULT_BACK_CAMERA
             },
             ){
-            Icon( modifier = Modifier.size(35.dp), imageVector = Icons.Rounded.FlipCameraIos, contentDescription = "Camera Converter icon", tint=Color.DarkGray)
+            Icon( modifier = Modifier.size(33.dp), imageVector = Icons.Rounded.FlipCameraIos, contentDescription = "Camera Converter icon", tint=Color.DarkGray)
         }
     }
 }
