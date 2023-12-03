@@ -151,7 +151,11 @@ fun Calendar() {
                         calendarView.setOnDateChangeListener { _, year, month, day ->
                             val formattedDate = String.format("%d-%02d-%02d", year, month + 1, day)
                             date = formattedDate
-
+                        }
+                        if(date == "2023-11-26"){
+                            val intent = Intent(context, DiaryEntryActivity::class.java)
+                            intent.putExtra("DATE_KEY", date) // "DATE_KEY"라는 키로 date 값을 DiaryEntryActivity로 전달
+                            context.startActivity(intent)
                         }
                     },
                     modifier = Modifier

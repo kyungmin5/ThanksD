@@ -52,6 +52,11 @@
             android:exported="true"
             android:label="@string/title_activity_diaryentry"
             android:theme="@style/Theme.ThanksD" />
+        <activity
+            android:name=".asmr.MoreQuotesActivity"
+            android:exported="true"
+            android:label="@string/title_activity_more_quotes"
+            android:theme="@style/Theme.ThanksD" />
 
         <activity
             android:name=".login.LoginActivity"

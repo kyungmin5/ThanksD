@@ -31,6 +31,8 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -168,7 +170,7 @@ class Healing {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp)
+                        .height(90.dp)
                 ){
                     //TODO today's quote 띄울 컴포저블 함수 구현
                     todayQuotes()
@@ -190,8 +192,8 @@ class Healing {
                         color = Color.Gray,
                         modifier = Modifier.clickable {
                             //TODO 클릭시 기능 구현 (quote 상세 페이지)
-//                                val intent = Intent(context, ChangeNameActivity::class.java)
-//                                context.startActivity(intent)
+                                val intent = Intent(context, MoreQuotesActivity::class.java)
+                                context.startActivity(intent)
                         }
                     )
 
@@ -238,9 +240,9 @@ class Healing {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(10.dp)
                 .background(Color(0xFFAC9C7C), shape = RoundedCornerShape(8.dp))
-                .padding(8.dp)
+                .padding(10.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -270,7 +272,39 @@ class Healing {
 
     @Composable
     fun quotes(){
+        val quotesList = remember {
+            mutableListOf<Quote>()
+        }
 
+        // 여기서 10개의 명언을 무작위로 가져와서 목록에 추가
+        repeat(10) {
+            val randomQuote = getRandomQuote()
+            quotesList.add(randomQuote)
+        }
+
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        ) {
+            items(quotesList) { quote ->
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .background(Color(0xFFA5A19E), shape = RoundedCornerShape(8.dp))
+                        .width(200.dp)
+                        .fillMaxHeight()
+                ) {
+                    Text(
+                        text = "${quote.content} - ${quote.author}",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        }
     }
 
     @Composable

@@ -197,4 +197,10 @@ dependencies {
     /* Logging Interceptor for HTTP Request */
     implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
 
+    /* RecyclerView 라이브러리를 추가합니다. */
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+
+    /* ViewPager */
+    implementation "com.google.accompanist:accompanist-pager:0.16.0"
+
 }
