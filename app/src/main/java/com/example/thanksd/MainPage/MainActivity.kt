@@ -119,12 +119,12 @@ fun Calendar() {
                         color=Color.Black,
                     )
                 }
-                //
+
                 item{
                     // 캘린더 뷰 위에 무작위 명언과 작가 이름을 포함한 상자 추가
                     RandomQuoteBox()
                 }
-                //
+
                 item{
                     // 메인 켈린더
                     MainCalendar()
@@ -134,7 +134,7 @@ fun Calendar() {
 
         },
 
-        )
+    )
 }
 
 
@@ -301,7 +301,7 @@ fun RandomQuoteBox() {
                 textAlign = TextAlign.End,
                 text = "- ${quote.author}",
                 fontSize = 12.sp,
-                color = Color(0xFF567050),
+                color = Color(0xFF006400),
                 fontWeight = FontWeight.Bold
             )
         }

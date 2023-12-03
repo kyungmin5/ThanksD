@@ -72,6 +72,7 @@ import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.asmr.dataclass.mediaItem
 import com.example.thanksd.asmr.dataclass.mediaViewModel
 import com.example.thanksd.asmr.dataclass.youtubeData
+import com.example.thanksd.asmr.dataclass.youtubeData.videoIDs
 import com.example.thanksd.asmr.music.YoutubeURL
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,15 +83,9 @@ class Healing {
     var streamurl = MutableStateFlow<String>("")
     lateinit var exoPlayer:ExoPlayer
     lateinit var mediaViewModels: ArrayList<mediaViewModel>
-    val videoIDs = listOf(
-        "n1WLUReOFcQ",
-        "jJ7dJvQji_0",
-        "lfs2_LvM7WY",
-        "d41r5AAKoXA",
-        "ss-QUzI90to"
-    )
+
     companion object {
-        val contentNum = 5
+        val contentNum = 10
     }
 
     private fun setPlaylist(context: Context, lifeCycleOwner:LifecycleOwner){
@@ -108,6 +103,7 @@ class Healing {
             return
         }
         var i =0
+        youtubeData.youtueItems.clear()
         for(videoID in videoIDs){
             urlManager.generateURL(videoID, mediaViewModels[i])
             mediaViewModels[i].url.observe(lifeCycleOwner, Observer { item ->

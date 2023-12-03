@@ -1,5 +1,6 @@
 package com.example.thanksd.MainPage.component
 
+
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -41,12 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thanksd.MainPage.DiaryEntryActivity
-import com.example.thanksd.MainPage.dataclass.DiaryItem
-import com.example.thanksd.MainPage.dataclass.DiaryResponse
-import com.example.thanksd.MainPage.datelist
-//import com.example.thanksd.MainPage.diarydataList
-import com.example.thanksd.Retrofit.RetrofitClient
 import com.example.thanksd.Retrofit.RetrofitManager
 import com.example.thanksd.dashboard.DaysOfWeekTitle
 import com.example.thanksd.dashboard.ui.theme.DarkBrown
@@ -63,9 +58,6 @@ import com.kizitonwose.calendar.core.nextMonth
 import com.kizitonwose.calendar.core.previousMonth
 import com.kizitonwose.calendar.core.yearMonth
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -155,6 +147,7 @@ fun MainCalendar() {
                                 val intent = Intent(context, DiaryEntryActivity::class.java)
                                 intent.putExtra("DATE_KEY", it.date.toString()) // "DATE_KEY"라는 키로 date 값을 DiaryEntryActivity로 전달
                                 context.startActivity(intent)
+                                // 일기가 있으면 뷰어 보기 -> 클릭 이벤트
                             }
                         })},
                 )
@@ -211,6 +204,7 @@ fun Day(day: CalendarDay, isDiaryExist: Boolean, isSelected: Boolean,  onClick: 
     var today = LocalDate.now()
     val context = LocalContext.current
 
+
     Box(
         modifier = Modifier
             .aspectRatio(1f)
@@ -221,13 +215,10 @@ fun Day(day: CalendarDay, isDiaryExist: Boolean, isSelected: Boolean,  onClick: 
             )
             .clickable(
                 enabled = (day.position == DayPosition.MonthDate && !today.isBefore(day.date)),
-                onClick = {
-                    onClick(day)
-                }
+                onClick = { onClick(day) }
             )
             .then(
-                if (isDiaryExist)
-                    Modifier.border(
+                if (isDiaryExist) Modifier.border(
                     2.dp,
                     PrimaryYellow,
                     shape = MaterialTheme.shapes.extraLarge

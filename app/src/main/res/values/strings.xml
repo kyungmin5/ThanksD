@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ThanksD</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">ThanksD</string>
     <string name="title_activity_diaryentry">DiaryEntryActivity</string>
     <string name="title_activity_more_quotes">MoreQuotesActivity</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
