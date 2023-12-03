@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thanksd.MainPage.DiaryEntryActivity
 import com.example.thanksd.Retrofit.RetrofitManager
 import com.example.thanksd.dashboard.DaysOfWeekTitle
 import com.example.thanksd.dashboard.ui.theme.DarkBrown
