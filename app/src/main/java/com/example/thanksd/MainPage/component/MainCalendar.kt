@@ -134,6 +134,7 @@ fun MainCalendar() {
 
                 val context = LocalContext.current
                 HorizontalCalendar(
+                    userScrollEnabled = false,
                     state = state,
                     dayContent = { Day(day=it, isSelected=(selectedDate == it.date),
                         isDiaryExist =(it.date.format(formatter) in monthData),
