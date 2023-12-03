@@ -386,6 +386,22 @@ class UserProfile {
         encryptedPrefs.edit().putString("platformID","no-info").apply()
         encryptedPrefs.edit().putBoolean("isRegistered", false).apply()
         encryptedPrefs.edit().putString("loginDate","2020-12-12").apply()
+
+        val prefs = context.getSharedPreferences("UserName",Context.MODE_PRIVATE)
+        prefs.edit().putString("name","건덕이").apply()
+
+        context.getSharedPreferences("MySettings", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("sound",false)
+            .apply()
+        context.getSharedPreferences("MySettings", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("message",false)
+            .apply()
+        context.getSharedPreferences("MySettings", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("vibrate",false)
+            .apply()
     }
 
 
