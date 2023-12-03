@@ -1,7 +1,6 @@
-package com.example.thanksd.Retrofit
+package com.example.thanksd.retrofit
 
 import android.content.Context
-import com.example.thanksd.httpconnection.DiaryService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

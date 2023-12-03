@@ -1,7 +1,6 @@
 package com.example.thanksd.asmr
 
 import android.content.Intent
-import android.nfc.Tag
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thanksd.MainPage.MainActivity
-import com.example.thanksd.MainPage.QuotesData
-import com.example.thanksd.MainPage.dataclass.Quote
+import com.example.thanksd.mainpage.MainActivity
+import com.example.thanksd.mainpage.QuotesData
+import com.example.thanksd.mainpage.dataclass.Quote
 
 class MoreQuotesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,30 +1,35 @@
 package com.example.thanksd.retrofit
 
+import com.example.thanksd.dashboard.data.DashBoardByDateResponse
+import com.example.thanksd.dashboard.data.DashBoardByMonthResponse
+import com.example.thanksd.dashboard.data.DashBoardByWeekResponse
+import com.example.thanksd.editor.camera.data.DiarySaveResponse
 import com.example.thanksd.utils.API
 import com.google.gson.JsonElement
-import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
-import retrofit2.http.Multipart
 import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Query
-import retrofit2.http.Url
+
+data class DiaryPostReqBody(
+    val image: String
+)
 
 interface IRetrofit {
-
-
     // Diaries 일기 관련 요청
     @POST(API.DIARIES)
-    fun postDiary(@Body requestBody: DiaryRequestBody) : Call<JsonElement>
+    fun postDiary(@Body requestBody: DiaryPostReqBody) : Call<DiarySaveResponse>
 
     @GET(API.GET_PRESIGNED_URL)
     fun getPresignedUrl(@Query("image") imageName: String) : Call<JsonElement>
 
+    @GET(API.DIARIES_WEEK)
+    fun getDiariesByWeek(@Query("date") date: String) : Call<DashBoardByWeekResponse>
 
+    @GET(API.DIARIES_MONTH)
+    fun getDiariesByMonth(@Query("year") year: String, @Query("month") month: String) : Call<DashBoardByMonthResponse>
 
+    @GET(API.DIARIES_DATE)
+    fun getDairyByDate(@Query("date") date: String) : Call<DashBoardByDateResponse>
 }

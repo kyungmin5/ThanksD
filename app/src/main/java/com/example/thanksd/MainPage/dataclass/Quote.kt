@@ -1,4 +1,4 @@
-package com.example.thanksd.MainPage.dataclass
+package com.example.thanksd.mainpage.dataclass
 
 data class Quote(
     val content: String,

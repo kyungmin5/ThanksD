@@ -1,6 +1,6 @@
-package com.example.thanksd.MainPage
+package com.example.thanksd.mainpage
 
-import com.example.thanksd.MainPage.dataclass.Quote
+import com.example.thanksd.mainpage.dataclass.Quote
 
 object QuotesData {
     val quotesList = listOf(

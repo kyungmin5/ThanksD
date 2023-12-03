@@ -1,4 +1,4 @@
-package com.example.thanksd.MainPage.dataclass
+package com.example.thanksd.mainpage.dataclass
 
 import com.google.gson.annotations.SerializedName
 

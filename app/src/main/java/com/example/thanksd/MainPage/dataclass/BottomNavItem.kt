@@ -1,6 +1,4 @@
-package com.example.thanksd.MainPage.dataclass
-
-import androidx.compose.ui.graphics.vector.ImageVector
+package com.example.thanksd.mainpage.dataclass
 
 data class BottomNavItem (
     val name: String,

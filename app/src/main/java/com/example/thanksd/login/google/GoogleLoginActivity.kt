@@ -1,6 +1,5 @@
 package com.example.thanksd.login.google
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
@@ -25,11 +23,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.thanksd.BuildConfig
-import com.example.thanksd.MainPage.MainActivity
+import com.example.thanksd.mainpage.MainActivity
 import com.example.thanksd.httpconnection.HttpFunc
 import com.example.thanksd.httpconnection.JsonViewModel
 import com.example.thanksd.login.LoginActivity

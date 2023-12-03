@@ -1,4 +1,4 @@
-package com.example.thanksd.Retrofit
+package com.example.thanksd.retrofit
 
 import android.content.Context
 import okhttp3.Interceptor
