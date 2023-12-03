@@ -161,6 +161,7 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
                         contentDescription = null
                     )
                 }
+                Spacer(modifier = Modifier.height(5.dp))
                 Box(
                     modifier = Modifier
                         .width(300.dp)
