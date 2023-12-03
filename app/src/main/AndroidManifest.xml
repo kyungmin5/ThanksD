@@ -39,9 +39,7 @@
             android:name=".editor.EditorActivity"
             android:exported="false"
             android:label="@string/title_activity_editor"
-            android:theme="@style/Theme.ThanksD">
-        </activity>
-
+            android:theme="@style/Theme.ThanksD" />
         <activity
             android:name=".MainPage.MainActivity"
             android:exported="false"
@@ -52,18 +50,17 @@
             android:exported="true"
             android:label="@string/title_activity_diaryentry"
             android:theme="@style/Theme.ThanksD" />
-
         <activity
             android:name=".login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.ThanksD">
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-        </activity>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true"
@@ -81,4 +78,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

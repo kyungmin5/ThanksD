@@ -18,4 +18,8 @@ object API {
     const val DIARIES : String = "diaries"
     const val GET_PRESIGNED_URL : String = "diaries/presigned"
 
+    const val DIARIES_DATE : String = "diaries/date"
+    const val DIARIES_WEEK : String = "diaries/week"
+    const val DIARIES_MONTH : String = "diaries/calendar"
+
 }

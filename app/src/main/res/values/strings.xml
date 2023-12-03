@@ -10,4 +10,6 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_no_permission_screen">NoPermissionScreen</string>
     <string name="title_activity_canvas">CanvasActivity</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="title_activity_test">testActivity</string>
 </resources>
