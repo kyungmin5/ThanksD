@@ -1,5 +1,6 @@
 package com.example.thanksd.MainPage.component
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,7 @@ import com.example.thanksd.dashboard.ui.theme.DarkBrown
 import com.example.thanksd.dashboard.ui.theme.DarkGreen
 import com.example.thanksd.dashboard.ui.theme.PrimaryYellow
 import com.example.thanksd.dashboard.utils.displayText
+import com.example.thanksd.editor.EditorActivity
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -126,6 +129,7 @@ fun MainCalendar() {
                     })
                 DaysOfWeekTitle(daysOfWeek = daysOfWeek)
 
+                val context = LocalContext.current
                 HorizontalCalendar(
                     state = state,
                     dayContent = { Day(day=it, isSelected=(selectedDate == it.date),
@@ -133,6 +137,12 @@ fun MainCalendar() {
                         monthData=monthData,
                         onClick={ clickedDate ->
                             selectedDate=clickedDate.date
+                            if(clickedDate.date.isEqual(LocalDate.now())){
+                                val intent = Intent(context, EditorActivity::class.java)
+                                context.startActivity(intent)
+                            }else{
+                                // 일기가 있으면 뷰어 보기 -> 클릭 이벤트
+                            }
                         })},
                 )
             }
@@ -185,7 +195,7 @@ fun MainCalendarNav(
 @Composable
 fun Day(day: CalendarDay, isDiaryExist: Boolean, isSelected: Boolean,  onClick: (CalendarDay) -> Unit, monthData: List<String>) {
     var isSunday = day.date.dayOfWeek == DayOfWeek.SUNDAY
-    var today = LocalDate.now().dayOfMonth
+    var today = LocalDate.now()
 
     Box(
         modifier = Modifier
@@ -196,7 +206,7 @@ fun Day(day: CalendarDay, isDiaryExist: Boolean, isSelected: Boolean,  onClick: 
                 shape = CircleShape
             )
             .clickable(
-                enabled = day.position == DayPosition.MonthDate,
+                enabled = (day.position == DayPosition.MonthDate && !today.isBefore(day.date)),
                 onClick = { onClick(day) }
             )
             .then(
@@ -208,11 +218,11 @@ fun Day(day: CalendarDay, isDiaryExist: Boolean, isSelected: Boolean,  onClick: 
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(modifier = Modifier.alpha(if(day.position == DayPosition.MonthDate) 1f else 0.5f),
+        Text(modifier = Modifier.alpha(if(day.position == DayPosition.MonthDate && !today.isBefore(day.date)) 1f else 0.5f),
             text = day.date.dayOfMonth.toString(),
-            color=if(isSelected) Color.White else if (today== day.date.dayOfMonth) DarkGreen else if(isDiaryExist) PrimaryYellow
+            color=if(isSelected) Color.White else if (today.isEqual(day.date)) DarkGreen else if(isDiaryExist) PrimaryYellow
             else if(isSunday) Color.Red else Color.Black,
-            fontWeight =(if(today== day.date.dayOfMonth) FontWeight.Bold else FontWeight.Normal))
+            fontWeight =(if(today.isEqual(day.date)) FontWeight.Bold else FontWeight.Normal))
     }
 }
 
