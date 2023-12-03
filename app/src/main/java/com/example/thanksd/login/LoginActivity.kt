@@ -75,6 +75,7 @@ class LoginActivity : ComponentActivity() {
                 ) {
                     LoginView(kakaoAuthViewModel){ intent ->
                         startActivity(intent)
+                        finish()
                     }
 //                    Greeting("Android",)
                 }
@@ -97,6 +98,7 @@ fun LoginView(kakaoViewModel: KakaoAuthViewModel, navigator: (Intent) -> Unit){
         ClientInformation.platformID = encryptedPrefs.getString("platformID",ClientInformation.platformID)!!
         ClientInformation.isRegistered = encryptedPrefs.getBoolean("isRegistered", ClientInformation.isRegistered)
         navigator(Intent(context, MainActivity::class.java))
+
     }
 
     // 상태 저장
