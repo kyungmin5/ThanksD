@@ -46,35 +46,44 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.skydoves.landscapist.ImageOptions
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-private var diarydataList = ArrayList<DiaryItem>()
+lateinit var diarydataListFlow : MutableStateFlow<ArrayList<DiaryItem>>
 class DiaryEntryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             // Intent에서 date 값을 가져옴
             val receivedIntent = intent
             val date = receivedIntent.getStringExtra("DATE_KEY")
             val context = LocalContext.current
+            getDiaryByDate(date!!, context)
+            SetContent(date = date!!)
 
-            if (date != null) {
-                getDiaryByDate(date, context)
-                Log.d("너지?", diarydataList.toString())
-                var imageList = ArrayList<String>()
-                for (i in diarydataList.indices){
-                    imageList.add("https://thanksd-image-bucket.s3.ap-northeast-2.amazonaws.com/${diarydataList[i].image}")
-                    Log.d("얜가?", diarydataList[i].toString())
-                }
-                Stories(imageList, date)
-            }
             Log.d("date 확인", date.toString())
-            Log.d("한번 더 체크", diarydataList.toString())
         }
+    }
+}
+
+@Composable
+fun SetContent(date:String){
+
+    val context = LocalContext.current
+    val diarydataList by diarydataListFlow.collectAsState()
+    var imageList = ArrayList<String>()
+
+    if (diarydataList.isNotEmpty()) {
+        Log.d("너지?", diarydataList.toString())
+
+        for (i in diarydataList.indices){
+            imageList.add("https://thanksd-image-bucket.s3.ap-northeast-2.amazonaws.com/${diarydataList[i].image}")
+            Log.d("얜가?", diarydataList[i].toString())
+        }
+        Stories(imageList, date)
     }
 }
 
@@ -224,20 +233,22 @@ fun LinearIndicator(modifier: Modifier, startProgress: Boolean = false, onAnimat
 }
 
 fun getDiaryByDate(date : String, context: Context){
+    diarydataListFlow = MutableStateFlow<ArrayList<DiaryItem>>(ArrayList<DiaryItem>())
     RetrofitClient.create(context).getDiariesByDate(date).enqueue(object : Callback<DiaryResponse> {
         override fun onResponse(
             call: Call<DiaryResponse>,
             response: Response<DiaryResponse>
         ) {
             if(response.isSuccessful){
-                diarydataList.clear()
+//                diarydataListFlow.value.clear()
 
                 val responseBody = response.body()
                 responseBody?.data?.diaryList?.let { newList ->
 
-
-                    diarydataList.addAll(newList)
-                    Log.d("SUCCESS", "Setting: newList = $diarydataList")
+                    for(item in newList)
+                        Log.d("newList확인", newList.toString())
+                    diarydataListFlow.value = ArrayList(newList)
+                    Log.d("SUCCESS", "Setting: newList = ${diarydataListFlow.value}")
                 }
             }
             else{       // 받아오는 것을 실패했을 때-> 로그인 실패, 서버 오류
@@ -247,7 +258,7 @@ fun getDiaryByDate(date : String, context: Context){
         }
 
         override fun onFailure(call: Call<DiaryResponse>, t: Throwable) {
-            TODO("Not yet implemented")
+//            TODO("Not yet implemented")
         }
 
     })
