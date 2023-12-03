@@ -23,14 +23,13 @@ import java.time.LocalDate
 
 @Composable
 fun CalendarNav(
-    modifier: Modifier,
     current: LocalDate,
     formatter: (date: LocalDate) -> String,
     goToPrevious: () -> Unit,
     goToNext: () -> Unit,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.thanksd.MainPage.component.DaysOfWeekTitle
 import com.example.thanksd.Retrofit.RetrofitManager
 import com.example.thanksd.dashboard.component.CalendarNav
 import com.example.thanksd.dashboard.data.DiaryInfo
@@ -129,8 +130,6 @@ fun DashBoard() {
             // 네비게이션
             item {
                 CalendarNav(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 12.dp),
                     formatter = {
                         val dateString = it.format(formatter)
                          "${getMonthNameFromDate(dateString)} ${dateString.substring(8,10)}"
@@ -145,17 +144,17 @@ fun DashBoard() {
                         }
                         selectedDate = updatedDate
 
-
                     },
                     goToNext = {
                         val updatedDate = selectedDate.plusDays(1)
-                        if(selectedDate.yearMonth.toString() != updatedDate.yearMonth.toString()){
-                            coroutineScope.launch {
-                                state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
+                        if(!updatedDate.isAfter(LocalDate.now())){
+                            if(selectedDate.yearMonth.toString() != updatedDate.yearMonth.toString()){
+                                coroutineScope.launch {
+                                    state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
+                                }
                             }
+                            selectedDate = updatedDate
                         }
-                        selectedDate = updatedDate
-
                     },
                 )
             }
