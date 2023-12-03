@@ -54,7 +54,7 @@ fun QuotesScreen() {
             actions = {
                 // 'Exit' 텍스트를 TopAppBar 우측에 추가
                 Text(
-                    text = "Exit>",
+                    text = "Exit",
                     textAlign = TextAlign.Start,
                     fontSize = 15.sp,
                     color = Color.Gray,

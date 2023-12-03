@@ -149,6 +149,7 @@ class Healing {
                 Text(
                     text = "Today's Quotes",
                     textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.Bold,
                     fontSize = 25.sp)
                 Box(
                     modifier = Modifier
@@ -166,10 +167,11 @@ class Healing {
                     Text(
                         text = "Quotes",
                         textAlign = TextAlign.Start,
+                        fontWeight = FontWeight.Bold,
                         fontSize = 25.sp)
                     Spacer(modifier = Modifier.weight(1.0F,true))
                     Text(
-                        text = "more >",
+                        text = "more...",
                         textAlign = TextAlign.Start,
                         fontSize = 15.sp,
                         color = Color.Gray,
@@ -194,6 +196,7 @@ class Healing {
                 ) {
                     Text(
                         text = "Sounds",
+                        fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start,
                         fontSize = 25.sp)
                     Box(

@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thanksd.MainPage.DiaryEntryActivity
@@ -238,16 +239,18 @@ fun Day(day: CalendarDay, isDiaryExist: Boolean, isSelected: Boolean,  onClick: 
 
 @Composable
 fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
         for (dayOfWeek in daysOfWeek) {
 
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                color=(if(dayOfWeek == DayOfWeek.SUNDAY) Color.Red else Color.Black)
+                color=(if(dayOfWeek == DayOfWeek.SUNDAY) Color.Red else Color.Black),
             )
         }
     }
