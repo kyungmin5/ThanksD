@@ -217,28 +217,31 @@ fun BottomNavigationBar(
 @Composable
 fun Screen(navController: NavHostController){
     val context = LocalContext.current
+    val currentRoute = remember { mutableStateOf("home") }
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    val intent = Intent(context, EditorActivity::class.java)
-                    context.startActivity(intent)
-                },
-                shape = CircleShape,
-                modifier = Modifier
-                    .size(45.dp),
-                content= {
-                    Icon(
-                        modifier = Modifier.fillMaxSize()
-                            .background(PrimaryYellow)
-                            .size(24.dp),
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        tint = Color.White, // '+' 모양의 색상 설정
+            if (currentRoute.value == "home") {
+                FloatingActionButton(
+                    onClick = {
+                        val intent = Intent(context, EditorActivity::class.java)
+                        context.startActivity(intent)
+                    },
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .size(45.dp),
+                    content = {
+                        Icon(
+                            modifier = Modifier.fillMaxSize()
+                                .background(PrimaryYellow)
+                                .size(24.dp),
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = Color.White, // '+' 모양의 색상 설정
 
-                    )
-                }
-            )
+                        )
+                    }
+                )
+            }
         },
         bottomBar = {
             BottomNavigationBar(
@@ -264,6 +267,7 @@ fun Screen(navController: NavHostController){
                 ),
                 navController = navController,
                 onItemClick = {
+                    currentRoute.value = it.route
                     navController.navigate(it.route)
                 })
         }
