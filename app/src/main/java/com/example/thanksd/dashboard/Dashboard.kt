@@ -110,7 +110,6 @@ fun DashBoard() {
                 if(it.toList().max()!=0){
                     weekMaxCount = it.toList().max()
                 }
-
             }
         }
         var monthResponse = retrofitManager.getDiariesByMonth(year=newDate.year.toString(), month=newDate.month.value.toString())

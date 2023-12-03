@@ -3,9 +3,7 @@ package com.example.thanksd.asmr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.text.style.ClickableSpan
 import android.util.Log
-import android.util.SparseArray
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
@@ -17,7 +15,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,15 +22,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -44,7 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -56,9 +53,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,13 +63,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import com.example.thanksd.R
+import com.example.thanksd.MainPage.QuotesData
+import com.example.thanksd.MainPage.dataclass.Quote
 import com.example.thanksd.asmr.dataclass.mediaItem
 import com.example.thanksd.asmr.dataclass.mediaViewModel
 import com.example.thanksd.asmr.dataclass.youtubeData
@@ -158,7 +153,7 @@ class Healing {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp)
+                        .height(90.dp)
                 ){
                     //TODO today's quote 띄울 컴포저블 함수 구현
                     todayQuotes()
@@ -180,8 +175,8 @@ class Healing {
                         color = Color.Gray,
                         modifier = Modifier.clickable {
                             //TODO 클릭시 기능 구현 (quote 상세 페이지)
-//                                val intent = Intent(context, ChangeNameActivity::class.java)
-//                                context.startActivity(intent)
+                                val intent = Intent(context, MoreQuotesActivity::class.java)
+                                context.startActivity(intent)
                         }
                     )
 
@@ -209,6 +204,8 @@ class Healing {
                         asmr()
                     }
                 }
+
+
             }
             Box(
                 modifier = Modifier
@@ -220,14 +217,77 @@ class Healing {
         }
     }
     @Composable
-    fun todayQuotes(){
+    fun todayQuotes() {
+        val quote = remember { getRandomQuote() } // QuotesData에서 무작위 명언 가져오기
 
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .background(Color(0xFFAC9C7C), shape = RoundedCornerShape(8.dp))
+                .padding(10.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .align(Alignment.BottomStart)
+            ) {
+                Text(
+                    text = quote.content,
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = "- ${quote.author}",
+                    fontSize = 12.sp,
+                    color = Color(0xFF567050), // 짙은 초록색
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.End
+                )
+            }
+        }
     }
 
+    fun getRandomQuote(): Quote {
+        val randomIndex = (0 until QuotesData.quotesList.size).random()
+        return QuotesData.quotesList[randomIndex]
+    }
 
     @Composable
     fun quotes(){
+        val quotesList = remember {
+            mutableListOf<Quote>()
+        }
 
+        // 여기서 10개의 명언을 무작위로 가져와서 목록에 추가
+        repeat(10) {
+            val randomQuote = getRandomQuote()
+            quotesList.add(randomQuote)
+        }
+
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        ) {
+            items(quotesList) { quote ->
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .background(Color(0xFFA5A19E), shape = RoundedCornerShape(8.dp))
+                        .width(200.dp)
+                        .fillMaxHeight()
+                ) {
+                    Text(
+                        text = "${quote.content} - ${quote.author}",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        }
     }
 
     @Composable

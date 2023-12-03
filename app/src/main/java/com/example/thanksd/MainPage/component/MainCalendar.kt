@@ -1,5 +1,7 @@
 package com.example.thanksd.MainPage.component
 
+
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
@@ -141,6 +143,10 @@ fun MainCalendar() {
                                 val intent = Intent(context, EditorActivity::class.java)
                                 context.startActivity(intent)
                             }else{
+                                Log.d("date 출력 확인", it.date.toString())
+                                val intent = Intent(context, DiaryEntryActivity::class.java)
+                                intent.putExtra("DATE_KEY", it.date.toString()) // "DATE_KEY"라는 키로 date 값을 DiaryEntryActivity로 전달
+                                context.startActivity(intent)
                                 // 일기가 있으면 뷰어 보기 -> 클릭 이벤트
                             }
                         })},
@@ -196,6 +202,8 @@ fun MainCalendarNav(
 fun Day(day: CalendarDay, isDiaryExist: Boolean, isSelected: Boolean,  onClick: (CalendarDay) -> Unit, monthData: List<String>) {
     var isSunday = day.date.dayOfWeek == DayOfWeek.SUNDAY
     var today = LocalDate.now()
+    val context = LocalContext.current
+
 
     Box(
         modifier = Modifier

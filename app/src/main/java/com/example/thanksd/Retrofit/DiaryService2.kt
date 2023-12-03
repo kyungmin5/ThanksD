@@ -2,6 +2,7 @@ package com.example.thanksd.Retrofit
 
 import com.example.thanksd.MainPage.dataclass.DiaryResponse
 import com.example.thanksd.MainPage.dataclass.DiaryResponseByMonth
+import com.example.thanksd.MainPage.dataclass.DiaryResponsePresignedUrl
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,4 +13,10 @@ interface DiaryService2 {
 
     @GET("/diaries/calendar")
     fun getDiriesByMonth(@Query("year") year: Int, @Query("month") month : Int): Call<DiaryResponseByMonth>
+
+    @GET("/diaries/presigned")
+    fun getPresignedUrl(@Query("image") imageName: String) : Call<DiaryResponsePresignedUrl>
+
+//    @POST("/diaries")
+//    fun postDiary(@Body() requestBody: DiaryRequestBody) : Call<DiaryPostImg>
 }

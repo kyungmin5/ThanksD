@@ -193,7 +193,8 @@ dependencies {
     implementation "androidx.media3:media3-ui:$media3_version"
 
     /* 유튜브 url 연결 */
-    implementation 'com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7'
+    implementation "com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7"
+
 
 
     /* Retrofit for HTTP Request */
@@ -203,6 +204,20 @@ dependencies {
     /* Logging Interceptor for HTTP Request */
     implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
 
+    /* RecyclerView 라이브러리를 추가합니다. */
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+
+    /* ViewPager */
+    implementation "com.google.accompanist:accompanist-pager:0.16.0"
+
+    // The compose calendar library
+    implementation 'com.kizitonwose.calendar:compose:2.4.0'
+
+    // Glide
+    implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
+    implementation "com.github.skydoves:landscapist-glide:2.2.12"
+
     // The compose calendar library
     implementation 'com.kizitonwose.calendar:compose:2.4.0'
 }
+

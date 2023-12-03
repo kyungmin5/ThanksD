@@ -3,10 +3,7 @@ package com.example.thanksd.login
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,9 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -45,15 +39,10 @@ import com.example.thanksd.R
 import com.example.thanksd.httpconnection.HttpFunc
 import com.example.thanksd.httpconnection.JsonViewModel
 import com.example.thanksd.login.dataclass.ClientInformation
-import com.example.thanksd.login.dataclass.ClientInformation.token
 import com.example.thanksd.login.google.GoogleLoginActivity
 import com.example.thanksd.login.kakao.KakaoAuthViewModel
 import com.example.thanksd.ui.theme.ThanksDTheme
-import com.kakao.sdk.common.util.Utility
-import com.kakao.sdk.common.util.Utility.getKeyHash
 import org.json.JSONObject
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.time.LocalDate
 import java.time.Period
 
