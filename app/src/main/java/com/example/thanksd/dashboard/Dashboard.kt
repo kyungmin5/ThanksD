@@ -1,8 +1,10 @@
 package com.example.thanksd.dashboard
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,11 +40,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.thanksd.MainPage.DiaryEntryActivity
 import com.example.thanksd.MainPage.component.DaysOfWeekTitle
 import com.example.thanksd.Retrofit.RetrofitManager
 import com.example.thanksd.dashboard.component.CalendarNav
@@ -76,7 +80,6 @@ fun DashBoard() {
     var weekMaxCount  by remember { mutableIntStateOf(1) }
     var monthData by remember { mutableStateOf<List<String>>(emptyList()) }
 
-
     // 캘린더 관련 상태 변수
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     val coroutineScope = rememberCoroutineScope()
@@ -84,6 +87,8 @@ fun DashBoard() {
     val startMonth = remember { selectedDate.yearMonth.minusMonths(100) } // Adjust as needed
     val endMonth = remember { selectedDate.yearMonth.plusMonths(100) } // Adjust as needed
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    val context = LocalContext.current
 
     var state = rememberCalendarState(
         startMonth = startMonth,
@@ -99,7 +104,6 @@ fun DashBoard() {
         if(dateResponse?.message?.equals("OK")!!){
             dateResponse?.data?.diaryList?.let{
                 dateData = it
-
             }
         }
 
@@ -181,7 +185,19 @@ fun DashBoard() {
                         if(dateData.size != 0){
                             items(dateData){ item  ->
                                 AsyncImage(modifier=Modifier.fillMaxWidth().size(65.dp).padding(5.dp)
-                                    .clip(CircleShape),
+                                    .clip(CircleShape)
+                                    .clickable(
+                                        onClick = {
+                                            val intent = Intent(
+
+                                                context, DiaryEntryActivity::class.java)
+                                            intent.putExtra(
+                                                "DATE_KEY",
+                                                selectedDate.toString()
+                                            ) // "DATE_KEY"라는 키로 date 값을 DiaryEntryActivity로 전달
+                                            context.startActivity(intent)
+                                        }
+                                    ),
                                     model="https://thanksd-image-bucket.s3.ap-northeast-2.amazonaws.com/${item.imageUrl}",
                                     contentDescription = "Diary Thumbnail",
                                     contentScale = ContentScale.Crop)
@@ -257,7 +273,6 @@ fun DashBoard() {
                             monthHeader = { DaysOfWeekTitle(daysOfWeek = daysOfWeek) },
                             userScrollEnabled=false,
                         )
-
                     }
 
                 }
