@@ -303,7 +303,7 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color=(if(dayOfWeek == DayOfWeek.SUNDAY) Color.Red else Color.Black)

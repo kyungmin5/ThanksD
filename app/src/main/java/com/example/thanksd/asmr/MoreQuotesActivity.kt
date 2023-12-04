@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thanksd.MainPage.MainActivity
@@ -54,7 +55,7 @@ fun QuotesScreen() {
             actions = {
                 // 'Exit' 텍스트를 TopAppBar 우측에 추가
                 Text(
-                    text = "Exit>",
+                    text = "Exit",
                     textAlign = TextAlign.Start,
                     fontSize = 15.sp,
                     color = Color.Gray,
@@ -62,7 +63,7 @@ fun QuotesScreen() {
                         //TODO 클릭시 기능 구현 (quote 상세 페이지)
                         val intent = Intent(context, MainActivity::class.java)
                         context.startActivity(intent)
-                    }
+                    }.padding(10.dp)
                 )
             }
         )
@@ -82,26 +83,33 @@ fun QuoteItem(quote: Quote) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(10.dp)
             .background(Color(0xFFAC9C7C), shape = RoundedCornerShape(8.dp))
-            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(bottom = 4.dp)
-                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(10.dp,5.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
+                modifier = Modifier
+                    .padding(10.dp,0.dp),
                 text = quote.content,
-                fontSize = 16.sp,
-                color = Color.White
-            )
-            Text(
-                text = "- ${quote.author}",
-                fontSize = 12.sp,
-                color = Color(0xFF567050),
+                textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End
+                fontSize = 16.sp,
+                color = Color.White,
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = "- ${quote.author} -",
+                fontSize = 12.sp,
+                color = Color(0xFF567050), // 짙은 초록색
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End,
             )
         }
     }
