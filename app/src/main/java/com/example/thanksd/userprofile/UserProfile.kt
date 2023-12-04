@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,7 +83,7 @@ class UserProfile {
     }
     fun getSharedPrefValue(context: Context): String {
         val prefs = context.getSharedPreferences("UserName",Context.MODE_PRIVATE)
-        return prefs.getString("name", "건붕이") ?: "건붕이"
+        return prefs.getString("name", "건덕이") ?: "건덕이"
     }
     @Composable
     fun userData(){
@@ -127,6 +128,7 @@ class UserProfile {
                 Text(
                     text = text!!, //TODO 유저 닉네임 지정 형식?
                     textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.Bold,
                     fontSize = 20.sp)
                 Text(
                     text = ClientInformation.email!!,

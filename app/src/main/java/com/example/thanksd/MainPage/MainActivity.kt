@@ -87,6 +87,8 @@ fun Calendar() {
     Log.d("check123", ClientInformation.token)
 
     val scrollstate = rememberScrollState()
+    val prefs = context.getSharedPreferences("UserName",Context.MODE_PRIVATE)
+    val userName = prefs.getString("name", "건덕이") ?: "건덕이"
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -112,7 +114,7 @@ fun Calendar() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
-                        text = "Hi, user12! How's your day going?\n Here is Today's quotes for you :)",
+                        text = "Hi, ${userName}! How's your day going?\n Here is Today's quotes for you :)",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
