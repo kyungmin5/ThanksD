@@ -56,6 +56,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -195,6 +196,7 @@ class Healing {
                     modifier = Modifier.padding(bottom = 55.dp)
                 ) {
                     Text(
+                        modifier = Modifier.padding(bottom = 15.dp),
                         text = "Sounds",
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start,
@@ -226,26 +228,36 @@ class Healing {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
                 .background(Color(0xFFAC9C7C), shape = RoundedCornerShape(8.dp))
-                .padding(10.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(bottom = 4.dp)
-                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
+                    modifier = Modifier
+                        .padding(10.dp,0.dp),
                     text = quote.content,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = Color.White
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
+                Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = "- ${quote.author}",
+                    text = "- ${quote.author} -",
                     fontSize = 12.sp,
                     color = Color(0xFF567050), // 짙은 초록색
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -274,19 +286,34 @@ class Healing {
                 .height(150.dp)
         ) {
             items(quotesList) { quote ->
-                Box(
+                Column(
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(10.dp)
                         .background(Color(0xFFA5A19E), shape = RoundedCornerShape(8.dp))
                         .width(200.dp)
-                        .fillMaxHeight()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "${quote.content} - ${quote.author}",
+                        modifier = Modifier
+                            .padding(20.dp,0.dp),
+                        text = "${quote.content}",
                         color = Color.White,
+                        fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.align(Alignment.Center)
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(
+                        text = "- ${quote.author} -",
+                        color = Color.White.copy(alpha=0.7f),
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
@@ -336,8 +363,12 @@ class Healing {
                                 )
                                 Text(text = item.title,
                                     modifier = Modifier
+                                        .padding(5.dp, 5.dp, 5.dp, 10.dp)
                                         .width(175.dp)
-                                        .height(36.dp)
+                                        .height(36.dp),
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }
